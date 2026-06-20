@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kangaroo Math Quiz - Grade 4 & 6</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
+  body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; color: #333; }
+  .container { max-width: 820px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 32px; }
+  h1 { text-align: center; color: #4a3a8a; margin-bottom: 8px; font-size: 28px; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 24px; font-size: 14px; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .btn { display: inline-block; padding: 14px 28px; background: #667eea; color: #fff; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; transition: all 0.2s; margin: 6px; }
+  .btn:hover { background: #5568d3; transform: translateY(-2px); }
+  .btn.secondary { background: #e0e0e0; color: #333; }
+  .btn.secondary:hover { background: #d0d0d0; }
+  .btn-big { font-size: 20px; padding: 20px 40px; min-width: 220px; }
+  .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin: 20px 0; }
+  .card { background: #f5f7ff; border: 2px solid #e0e5ff; border-radius: 12px; padding: 24px; cursor: pointer; transition: all 0.2s; text-align: center; flex: 1; min-width: 200px; }
+  .card:hover { border-color: #667eea; transform: translateY(-4px); box-shadow: 0 8px 20px rgba(102,126,234,0.2); }
+  .card h3 { color: #4a3a8a; margin-bottom: 8px; }
+  .card p { color: #666; font-size: 14px; }
+  .config-row { margin: 20px 0; }
+  .config-row label { display: block; font-weight: 600; margin-bottom: 8px; color: #555; }
+  select, input { padding: 12px; border: 2px solid #e0e5ff; border-radius: 8px; font-size: 16px; width: 100%; }
+  .question-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f0f0f0; }
+  .q-num { font-weight: 700; color: #667eea; font-size: 18px; }
+  .score-display { background: #4caf50; color: #fff; padding: 6px 14px; border-radius: 20px; font-weight: 600; }
+  .question-text { font-size: 20px; margin-bottom: 20px; line-height: 1.5; color: #222; font-weight: 500; }
+  .question-figure { text-align: center; margin: 12px 0 16px; }
+  .question-figure svg { max-width: 100%; height: auto; border: 1px solid #e0e5ff; border-radius: 8px; padding: 8px; background: #fafbff; }
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .option { padding: 14px 18px; background: #f5f7ff; border: 2px solid #e0e5ff; border-radius: 10px; cursor: pointer; font-size: 16px; transition: all 0.2s; text-align: left; }
+  .option:hover:not(.disabled) { border-color: #667eea; background: #eef1ff; }
+  .option.correct { background: #d4f5dd; border-color: #4caf50; color: #1b5e20; font-weight: 600; }
+  .option.wrong { background: #fde0e0; border-color: #e53935; color: #b71c1c; font-weight: 600; }
+  .option.disabled { cursor: not-allowed; }
+  .explanation { background: #fff9e6; border-left: 4px solid #ffb300; padding: 16px; border-radius: 6px; margin-bottom: 20px; display: none; }
+  .explanation.show { display: block; }
+  .explanation strong { color: #e65100; }
+  .progress-bar { height: 8px; background: #eee; border-radius: 4px; overflow: hidden; margin-bottom: 20px; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); transition: width 0.3s; }
+  .result-box { text-align: center; padding: 30px; }
+  .result-score { font-size: 60px; font-weight: 700; color: #667eea; margin: 16px 0; }
+  .result-msg { font-size: 20px; color: #555; margin-bottom: 24px; }
+  .back-btn { background: none; border: none; color: #667eea; cursor: pointer; font-size: 14px; margin-bottom: 16px; }
+  .back-btn:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🦘 Kangaroo Math Quiz</h1>
+  <p class="subtitle">Practice for the Math Kangaroo Exam — Grade 4 & Grade 6</p>
+
+  <!-- Screen 1: Grade select -->
+  <div id="screen-grade" class="screen active">
+    <h2 style="text-align:center;margin:20px 0;color:#555;">Choose Your Grade</h2>
+    <div class="grid">
+      <div class="card" onclick="selectGrade(4)">
+        <h3>📘 Grade 4</h3>
+        <p>Arithmetic, patterns, shapes, and simple word problems</p>
+      </div>
+      <div class="card" onclick="selectGrade(6)">
+        <h3>📗 Grade 6</h3>
+        <p>Fractions, percentages, algebra, and geometry</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 2: Difficulty & count -->
+  <div id="screen-config" class="screen">
+    <button class="back-btn" onclick="showScreen('screen-grade')">&larr; Back</button>
+    <h2 style="text-align:center;margin-bottom:16px;color:#555;">Configure Your Quiz</h2>
+    <p style="text-align:center;color:#888;margin-bottom:20px;">Grade <span id="grade-label"></span></p>
+
+    <div class="config-row">
+      <label>Difficulty</label>
+      <select id="difficulty-select">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+    </div>
+
+    <div class="config-row">
+      <label>Number of Questions</label>
+      <select id="count-select">
+        <option value="5">5 questions</option>
+        <option value="10" selected>10 questions</option>
+        <option value="15">15 questions</option>
+        <option value="20">20 questions</option>
+      </select>
+    </div>
+
+    <div style="text-align:center;margin-top:24px;">
+      <button class="btn btn-big" onclick="startQuiz()">Start Quiz →</button>
+    </div>
+
+    <div style="margin-top:28px;padding-top:20px;border-top:2px dashed #e0e5ff;text-align:center;">
+      <p style="color:#666;margin-bottom:12px;font-size:14px;"><strong>Or try a real Kangaroo-style mock exam:</strong></p>
+      <p style="color:#888;margin-bottom:16px;font-size:13px;" id="full-exam-info"></p>
+      <button class="btn btn-big" style="background:#e65100;" onclick="startFullExam()">🏆 Start Full Mock Exam</button>
+    </div>
+  </div>
+
+  <!-- Screen 3: Quiz -->
+  <div id="screen-quiz" class="screen">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="question-header">
+      <span class="q-num" id="q-num">Question 1</span>
+      <span id="tier-badge" style="display:none;padding:4px 10px;border-radius:12px;font-size:12px;font-weight:700;"></span>
+      <span class="score-display">Score: <span id="score-now">0</span></span>
+    </div>
+    <div class="question-text" id="question-text"></div>
+    <div class="question-figure" id="question-figure"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+    <div style="text-align:center;">
+      <button class="btn" id="next-btn" onclick="nextQuestion()" style="display:none;">Next →</button>
+    </div>
+  </div>
+
+  <!-- Screen 4: Results -->
+  <div id="screen-results" class="screen">
+    <div class="result-box">
+      <h2 style="color:#555;">🎉 Quiz Complete!</h2>
+      <div class="result-score" id="final-score">0 / 0</div>
+      <div class="result-msg" id="result-msg"></div>
+      <button class="btn" onclick="showScreen('screen-grade')">🏠 Home</button>
+      <button class="btn secondary" onclick="location.reload()">🔄 New Questions</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ QUESTION GENERATORS ============
+// Each generator returns { q, options, answer, exp }
+// Random parameters mean a fresh pool every refresh.
+
+const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const pick = arr => arr[rand(0, arr.length - 1)];
+const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
+
+function makeMC(correct, distractors) {
+  const seen = new Set([String(correct)]);
+  const clean = [];
+  for (const d of distractors) {
+    const s = String(d);
+    if (!seen.has(s)) { seen.add(s); clean.push(s); }
+  }
+  // If we lost distractors to duplicates, pad with simple numeric perturbations
+  let pad = 1;
+  while (clean.length < 3) {
+    const cand = (typeof correct === 'number') ? String(correct + pad) : String(correct) + '?'.repeat(pad);
+    if (!seen.has(cand)) { seen.add(cand); clean.push(cand); }
+    pad++;
+    if (pad > 20) break;
+  }
+  const opts = shuffle([String(correct), ...clean.slice(0,3)]);
+  return { options: opts, answer: String(correct) };
+}
+
+// ---------- GRADE 4 EASY (Kangaroo style) ----------
+const g4_easy = [
+  () => { const fwd = rand(3,5), back = rand(1,2), jumps = rand(3,6); const net = (fwd-back)*jumps;
+    const story = pick([
+      [`A kangaroo jumps ${fwd} metres forward, then ${back} metre${back>1?'s':''} back`, 'She', 'metres forward from the start'],
+      [`A frog hops ${fwd} steps right, then ${back} step${back>1?'s':''} left`, 'It', 'steps to the right'],
+      [`A robot moves ${fwd} squares forward, then ${back} square${back>1?'s':''} backward`, 'It', 'squares ahead of start'],
+      [`A snail crawls ${fwd} cm up, then slides ${back} cm down`, 'It', 'cm up from the start'],
+    ]);
+    return { q: `${story[0]}. ${story[1]} repeats this ${jumps} times. How many ${story[2]}?`,
+      ...makeMC(net, [fwd*jumps, back*jumps, net+1]),
+      exp: `Each round: ${fwd}−${back} = ${fwd-back}. After ${jumps} rounds: ${fwd-back} × ${jumps} = ${net}.` }; },
+  () => { const a4 = rand(2,5), a2 = rand(3,7); const legs = a4*4 + a2*2;
+    const story = pick([
+      [`On a farm there are ${a4} cows and ${a2} chickens`, 'Cows', 'Chickens'],
+      [`In a park there are ${a4} dogs and ${a2} ducks`, 'Dogs', 'Ducks'],
+      [`A zoo has ${a4} elephants and ${a2} flamingos`, 'Elephants', 'Flamingos'],
+      [`At a pond there are ${a4} turtles and ${a2} cranes`, 'Turtles', 'Cranes'],
+    ]);
+    return { q: `${story[0]}. How many legs altogether?`,
+      ...makeMC(legs, [a4*2+a2*4, a4+a2, legs+2]),
+      exp: `${story[1]}: ${a4}×4 = ${a4*4} legs. ${story[2]}: ${a2}×2 = ${a2*2} legs. Total = ${legs}.` }; },
+  () => { const top = rand(1,6); const bot = 7-top;
+    return { q: `On a regular die, opposite faces always add up to 7. If the top face shows ${top}, what is on the bottom face?`,
+      ...makeMC(bot, [top, 6, 7]),
+      exp: `Opposite faces sum to 7, so bottom = 7 − ${top} = ${bot}.` }; },
+  () => { const h = rand(1,5), m = pick([10,15,20,30,45]); let nh=h, nm=m+20; if(nm>=60){nh++;nm-=60;}
+    return { q: `A clock shows ${h}:${String(m).padStart(2,'0')}. What time will it be in 20 minutes?`,
+      ...makeMC(`${nh}:${String(nm).padStart(2,'0')}`, [`${h}:${String((m+30)%60).padStart(2,'0')}`, `${nh+1}:${String(nm).padStart(2,'0')}`, `${h}:${String((m+10)%60).padStart(2,'0')}`]),
+      exp: `Add 20 minutes: ${h}:${String(m).padStart(2,'0')} + 20 min = ${nh}:${String(nm).padStart(2,'0')}.` }; },
+  () => { const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']; const start = rand(0,6); const add = rand(5,13);
+    const end = days[(start+add)%7];
+    return { q: `Today is ${days[start]}day. What day of the week will it be in ${add} days?`,
+      options: shuffle([end+'day', days[(start+add+1)%7]+'day', days[(start+add-1+7)%7]+'day', days[(start+add+2)%7]+'day']),
+      answer: end+'day',
+      exp: `${add} days = ${Math.floor(add/7)} week(s) and ${add%7} extra day(s). From ${days[start]}day add ${add%7} → ${end}day.` }; },
+  () => { const total = rand(5,10); const pos = rand(2, total-1);
+    return { q: `${total} kangaroos stand in a line. The ${pos}${['','st','nd','rd'][pos]||'th'} one from the left is wearing a hat. How many kangaroos are to the right of the one with the hat?`,
+      ...makeMC(total-pos, [pos-1, pos, total-pos+1]),
+      exp: `Right of position ${pos} there are ${total} − ${pos} = ${total-pos} kangaroos.` }; },
+  () => { const a = rand(2,5), b = rand(3,6), c = rand(1,4); const total = a+b+c; const giveaway = Math.floor(total/2);
+    const name = pick(['Lisa','Ahmed','Sara','Omar','Mona','Khalid']);
+    const items = pick([['red','blue','yellow','balloons'],['chocolate','vanilla','strawberry','ice creams'],['red','green','blue','marbles'],['apple','orange','banana','fruits']]);
+    return { q: `${name} has ${a} ${items[0]}, ${b} ${items[1]}, and ${c} ${items[2]} ${items[3]}. ${name} gives half of them (rounded down) away. How many does ${name} have left?`,
+      ...makeMC(total-giveaway, [giveaway, total, total-giveaway-1]),
+      exp: `Total = ${a}+${b}+${c} = ${total}. Half (rounded down) = ${giveaway}. Left = ${total}−${giveaway} = ${total-giveaway}.` }; },
+  () => { const rows = rand(3,5), cols = rand(3,5); const total = rows*cols;
+    const story = pick([
+      [`Chairs are arranged in ${rows} rows with ${cols} chairs in each row`, 'chairs'],
+      [`A garden has ${rows} rows of flowers with ${cols} flowers in each row`, 'flowers'],
+      [`A car park has ${rows} rows of spaces with ${cols} spaces in each row`, 'spaces'],
+      [`A classroom has ${rows} rows of desks with ${cols} desks in each row`, 'desks'],
+    ]);
+    return { q: `${story[0]}. How many ${story[1]} in total?`,
+      ...makeMC(total, [rows+cols, 2*(rows+cols), total+1]),
+      exp: `${rows} rows × ${cols} = ${total} ${story[1]}.` }; },
+  () => { const n = rand(3,6); const triangles = n; // n small triangles forming a row
+    return { q: `A shape is made of ${n} small triangles joined side by side to form a larger triangle strip. How many small triangles are there?`,
+      ...makeMC(n, [n+1, n-1, n*2]),
+      exp: `Count them directly: ${n} small triangles.` }; },
+  () => { const a = rand(5,15); const doubled = 2*a;
+    return { q: `I think of a number. I double it and get ${doubled}. What was my number?`,
+      ...makeMC(a, [doubled/4, doubled+1, a+2]),
+      exp: `Double means ×2. So number = ${doubled} ÷ 2 = ${a}.` }; },
+  () => { const side = rand(2,6); const p = 4*side;
+    return { q: `A square has side length ${side} cm. What is its perimeter?`,
+      ...makeMC(p, [side*side, 2*side, p+2]),
+      exp: `A square has 4 equal sides, so perimeter = 4 × ${side} = ${p} cm.` }; },
+  () => { const half = rand(10,20); const qrt = half*2;
+    return { q: `Which is bigger: half of ${qrt} or a quarter of ${qrt*2}?`,
+      options: shuffle([`Half of ${qrt}`, `Quarter of ${qrt*2}`, 'They are equal', 'Cannot tell']),
+      answer: 'They are equal',
+      exp: `Half of ${qrt} = ${qrt/2}. Quarter of ${qrt*2} = ${qrt/2}. They are equal.` }; },
+  // Classic Kangaroo: count distinct letters in a word
+  () => { const words = [['KANGAROO',5],['MATHEMATICS',8],['ECOLIER',7],['BENJAMIN',6],['ADDITION',6]];
+    const w = pick(words);
+    return { q: `Lisa wants to write the word ${w[0]} using a different colour for each different letter (same letters get the same colour). How many colours does she need?`,
+      ...makeMC(w[1], [w[0].length, w[1]+1, w[1]-1]),
+      exp: `Count the distinct letters in ${w[0]}: there are ${w[1]} different letters.` }; },
+  // Classic Kangaroo: pizza slices fraction
+  () => { const slices = pick([6,8,10,12]); const eaten = rand(1, slices-2); const left = slices-eaten;
+    return { q: `A pizza is cut into ${slices} equal slices. ${eaten} slice${eaten>1?'s are':' is'} eaten. What fraction of the pizza is left?`,
+      ...makeMC(`${left}/${slices}`, [`${eaten}/${slices}`, `${left+1}/${slices}`, `${eaten}/${left}`]),
+      exp: `Slices left = ${slices} − ${eaten} = ${left}. Fraction left = ${left}/${slices}.` }; },
+  // Real Kangaroo: Grid cell painting — paint R rows and 1 column, count remaining white cells
+  () => { const rows = rand(4,7), cols = rand(4,7); const paintR = rand(1,2); const total = rows*cols;
+    const painted = paintR*cols + rows - paintR; const white = total - painted;
+    return { q: `A table has ${rows} rows and ${cols} columns (${total} cells). Israa paints ${paintR} row${paintR>1?'s':''} and 1 column in red. How many cells remain white?`,
+      ...makeMC(white, [total-paintR*cols, white+1, white-1]),
+      exp: `Painted = ${paintR}×${cols} + ${rows} − ${paintR} (overlap) = ${painted}. White = ${total} − ${painted} = ${white}.` }; },
+  // Real Kangaroo: Pay N for K items, each different whole number — find max item
+  () => { const total = pick([7,8,9,10,11]); // items cost 1,2,...,k summing to total
+    // 3 items, costs are distinct positive integers summing to total
+    const maxItem = total - 3; // e.g. 1+2+max = total
+    return { q: `Reem pays ${total} zeds for 3 items. Each item costs a different whole number of zeds. What is the most the expensive item could cost?`,
+      ...makeMC(maxItem, [maxItem-1, total-1, maxItem+1]),
+      exp: `The cheapest two items cost at least 1 and 2 zeds. So the most expensive = ${total} − 1 − 2 = ${maxItem} zeds.` }; },
+  // Real Kangaroo: Players in a circle kicking ball every Kth player
+  () => { const n = pick([7,9,11]); const skip = pick([2,3]);
+    let pos = 1; const visited = new Set([1]); let lastKicker = 1;
+    while(true) { const next = ((pos-1+skip)%n)+1; if (visited.has(next)) break; lastKicker = pos; pos = next; visited.add(next); }
+    return { q: `${n} players numbered 1 to ${n} stand in a circle. Player 1 kicks the ball to the ${skip}${skip===2?'nd':'rd'} player on their left, and so on. Which player kicked the ball last before someone received it twice?`,
+      ...makeMC(lastKicker, [pos, n, lastKicker===1?2:lastKicker-1]),
+      exp: `Follow the chain: 1 → ${((1-1+skip)%n)+1} → … until a repeat. The last player to kick is ${lastKicker}.` }; },
+  // Kangaroo: fill in the missing number in a sequence
+  () => { const start = rand(2,8), step = rand(2,5); const seq = [start, start+step, start+2*step, start+3*step, start+4*step];
+    const hideIdx = rand(1,3); const hidden = seq[hideIdx]; seq[hideIdx] = '?';
+    return { q: `What number replaces the "?" in the sequence: ${seq.join(', ')}?`,
+      ...makeMC(hidden, [hidden+step, hidden-step, hidden+1]),
+      exp: `The sequence increases by ${step} each time. The missing number is ${hidden}.` }; },
+  // Kangaroo: how many triangles in a figure made of matchsticks
+  () => { const n = pick([2,3,4]); const triangles = n*(n+2)*(2*n+1)/8|0; // simplified: just use small known cases
+    const map = {2:5,3:13,4:27}; const ans = map[n]||n;
+    return { q: `${n} horizontal rows of matchsticks form a large triangle divided into small triangles. The large triangle has ${n} small triangles along each side. How many triangles of ALL sizes can you count?`,
+      ...makeMC(ans, [n*n, ans+2, ans-1]),
+      exp: `Counting all triangles (small, medium, large) gives ${ans}. This is a classic counting problem.` }; },
+  // Kangaroo: folding & cutting paper
+  () => { const folds = rand(1,3); const cuts = 1; const holes = Math.pow(2, folds)*cuts;
+    return { q: `Sara folds a piece of paper in half ${folds} time${folds>1?'s':''}. She then cuts ${cuts} hole through all the layers. When she unfolds the paper, how many holes are there?`,
+      ...makeMC(holes, [folds+cuts, holes+1, folds*2]),
+      exp: `Each fold doubles the layers. ${folds} fold${folds>1?'s':''} = ${Math.pow(2,folds)} layers. ${cuts} cut through all = ${holes} holes.` }; },
+  // Kangaroo: magic square partial info
+  () => { const magic = pick([15,18,21,24]); const a = rand(1,magic-4); const b = rand(1,magic-a-2); const c = magic-a-b;
+    if(c<1||c===a||c===b) return g4_easy[0]();
+    return { q: `In a magic square, every row adds to ${magic}. The first row has ${a} and ${b}. What is the third number in that row?`,
+      ...makeMC(c, [magic, c+1, a+b]),
+      exp: `Third number = ${magic} − ${a} − ${b} = ${c}.` }; },
+  // Kangaroo: sharing marbles so everyone has equal
+  () => { const kids = rand(3,5); const marbles = Array.from({length:kids},()=>rand(2,10)); const total = marbles.reduce((a,b)=>a+b,0);
+    const each = total/kids;
+    if(!Number.isInteger(each)) return g4_easy[1]();
+    return { q: `${kids} children have ${marbles.join(', ')} marbles respectively. They want to share equally. How many marbles should each child have?`,
+      ...makeMC(each, [Math.max(...marbles), total, each+1]),
+      exp: `Total = ${total}. Each gets ${total} ÷ ${kids} = ${each} marbles.` }; },
+  // Kangaroo: mirror reflection — which letter looks the same
+  () => { const symmetric = pick([['A',true],['B',false],['M',true],['T',true],['P',false],['H',true],['D',false],['V',true]]);
+    return { q: `When you hold a mirror vertically in front of the letter "${symmetric[0]}", does it look the same in the mirror?`,
+      options: shuffle(['Yes, it looks the same','No, it looks different','Only if the mirror is horizontal','Cannot tell']),
+      answer: symmetric[1] ? 'Yes, it looks the same' : 'No, it looks different',
+      exp: `"${symmetric[0]}" ${symmetric[1]?'has':'does not have'} vertical line symmetry, so it ${symmetric[1]?'looks the same':'looks different'} in a vertical mirror.` }; },
+  // Kangaroo: train carriages ordering puzzle
+  () => { const n = rand(5,8); const pos = rand(2,n-1);
+    const fromFront = pos; const fromBack = n-pos+1;
+    return { q: `A train has ${n} carriages. Lara is in the ${fromFront}${['','st','nd','rd'][fromFront]||'th'} carriage from the front. What position is her carriage from the back?`,
+      ...makeMC(fromBack, [n-fromFront, fromBack+1, fromFront]),
+      exp: `From back = total − from front + 1 = ${n} − ${fromFront} + 1 = ${fromBack}.` }; },
+];
+
+// ---------- GRADE 4 MEDIUM (Kangaroo style) ----------
+const g4_medium = [
+  () => { const h1=rand(7,9), m1=pick([0,15,30]); const h2=rand(10,12), m2=pick([0,15,30,45]);
+    const mins = (h2*60+m2)-(h1*60+m1); const hh = Math.floor(mins/60), mm = mins%60;
+    return { q: `A train leaves the station at ${h1}:${String(m1).padStart(2,'0')} and arrives at ${h2}:${String(m2).padStart(2,'0')}. How long is the journey?`,
+      ...makeMC(`${hh} h ${mm} min`, [`${hh+1} h ${mm} min`, `${hh} h ${mm+15} min`, `${hh-1} h ${mm} min`]),
+      exp: `From ${h1}:${String(m1).padStart(2,'0')} to ${h2}:${String(m2).padStart(2,'0')} is ${mins} minutes = ${hh} h ${mm} min.` }; },
+  () => { const total=rand(20,30), a=rand(8,15), b=rand(6,12), both=rand(2,Math.min(a,b)-1);
+    const neither = total - (a+b-both);
+    if (neither<0 || neither>total-1) return g4_medium[0]();
+    const story = pick([
+      [`children`,`like apples`,`like oranges`],
+      [`students`,`play football`,`play basketball`],
+      [`pupils`,`study English`,`study French`],
+      [`kids`,`have a cat`,`have a dog`],
+    ]);
+    return { q: `In a group of ${total} ${story[0]}, ${a} ${story[1]}, ${b} ${story[2]}, and ${both} do both. How many do neither?`,
+      ...makeMC(neither, [total-a-b, both, neither+1]),
+      exp: `At least one = ${a}+${b}−${both} = ${a+b-both}. Neither = ${total}−${a+b-both} = ${neither}.` }; },
+  () => { const small = rand(4,8); const big = 2*small; const total = big+small;
+    const story = pick([
+      ['Tom','his sister','Tom',3],['A father','his son','The father',3],['Layla','her cousin','Layla',3],['A tree','a bush','The tree',3]
+    ]);
+    return { q: `${story[0]} is twice as old as ${story[1]}. Together they are ${total} years old. How old is ${story[2]}?`,
+      ...makeMC(big, [small, total/2, big+1]),
+      exp: `If younger = x, older = 2x, so 3x = ${total}, x = ${small}. ${story[2]} = 2×${small} = ${big}.` }; },
+  () => { const L = rand(5,9), W = rand(2,L-1); const p = 2*(L+W);
+    return { q: `A rectangle has perimeter ${p} cm and length ${L} cm. What is its width?`,
+      ...makeMC(W, [L, p-L, W+1]),
+      exp: `Perimeter = 2(L+W), so L+W = ${p/2}. Width = ${p/2} − ${L} = ${W} cm.` }; },
+  () => { const top=rand(8,10), slide=rand(2,3), climb=slide+rand(1,2);
+    const daily = climb - slide; const lastDay = Math.ceil((top-climb)/daily)+1;
+    return { q: `A snail climbs a ${top} m wall. Each day it climbs ${climb} m, but each night it slides back ${slide} m. On which day does it reach the top?`,
+      ...makeMC(lastDay, [Math.ceil(top/daily), lastDay+1, lastDay-1]),
+      exp: `Each full day it gains ${daily} m. On the final day it climbs ${climb} m and does not slide. Answer: day ${lastDay}.` }; },
+  () => { const n = pick([30,40,50]); const count = String(Array.from({length:n},(_,i)=>i+1).join('')).split('').filter(d=>d==='2').length;
+    return { q: `How many times does the digit 2 appear when you write all the numbers from 1 to ${n}?`,
+      ...makeMC(count, [count+1, count-1, Math.floor(n/10)]),
+      exp: `Count them: digit 2 appears ${count} times in the numbers from 1 to ${n}.` }; },
+  () => { const rows=rand(3,4), cols=rand(3,4); const squares = rows*cols;
+    return { q: `A grid has ${rows} rows and ${cols} columns of unit squares. How many unit (1×1) squares are in the grid?`,
+      ...makeMC(squares, [rows+cols, 2*(rows+cols), squares+1]),
+      exp: `${rows} × ${cols} = ${squares} unit squares.` }; },
+  () => { const coin = rand(20,40); const pennies = coin;
+    return { q: `Using only 5¢ and 10¢ coins, in how many different ways can you make exactly ${coin}¢?`,
+      ...makeMC(Math.floor(coin/10)+1, [Math.floor(coin/5), coin, Math.floor(coin/10)]),
+      exp: `Let d = number of 10¢ coins (0 to ${Math.floor(coin/10)}). Each gives one way. Total = ${Math.floor(coin/10)+1} ways.` }; },
+  () => { const n = rand(5,7); const sum = n*(n+1)/2;
+    return { q: `Anna writes the numbers 1, 2, 3, …, ${n} on the board and adds them. What total does she get?`,
+      ...makeMC(sum, [n*n, n*2, sum+1]),
+      exp: `1+2+…+${n} = n(n+1)/2 = ${n}×${n+1}/2 = ${sum}.` }; },
+  () => { const cost = rand(3,6), num = rand(4,7); const paid = 10*Math.ceil((cost*num+3)/10); const change = paid - cost*num;
+    const name = pick(['Sara','Omar','Bushra','Ali','Noor']);
+    const item = pick(['pencils','notebooks','erasers','candy bars','stickers']);
+    return { q: `${name} buys ${num} ${item} at ${cost} zeds each and pays with a ${paid}-zed note. How much change does ${name} get?`,
+      ...makeMC(change, [cost*num, paid-cost, change+1]),
+      exp: `Cost = ${num} × ${cost} = ${cost*num} zeds. Change = ${paid} − ${cost*num} = ${change} zeds.` }; },
+  // Classic Kangaroo: Kenny the Kangaroo moves on a grid
+  () => { const up=rand(2,4), down=rand(0,1), left=rand(1,3), right=rand(2,4);
+    const net_v = up-down; const net_h = right-left;
+    const correct = `${net_v} up, ${net_h} right`;
+    return { q: `Kenny the Kangaroo starts at a point on a grid. He hops ${up} step${up>1?'s':''} up, ${right} step${right>1?'s':''} right, ${down} step${down>1?'s':''} down, and ${left} step${left>1?'s':''} left. Where does he end up compared to the start?`,
+      ...makeMC(correct, [`${up} up, ${right} right`, `${net_v+1} up, ${net_h} right`, `${net_v} up, ${net_h+1} right`]),
+      exp: `Vertical: ${up} up − ${down} down = ${net_v} up. Horizontal: ${right} right − ${left} left = ${net_h} right.` }; },
+  // Classic Kangaroo: children sharing equally (divisibility)
+  () => { const kids = pick([5,6,7,8]); const each = rand(3,9); const total = kids*each;
+    return { q: `${kids} friends share ${total} stickers equally. How many stickers does each friend get?`,
+      ...makeMC(each, [each+1, total-kids, each-1]),
+      exp: `${total} ÷ ${kids} = ${each} stickers each.` }; },
+  // Real Kangaroo: Coin toss game — purple = advance, green = go back
+  () => { const tosses = 4; const target = rand(4,8);
+    const purple = Math.ceil((target+tosses)/4); // estimate
+    // Solve: 3p - 1*(tosses-p) = target → 4p - tosses = target → p = (target+tosses)/4
+    const p = (target + tosses)/4;
+    if (!Number.isInteger(p) || p<0 || p>tosses) return g4_medium[0]();
+    const green = tosses - p;
+    return { q: `Ahmed tosses a coin ${tosses} times. Purple side means advance 3 steps, green side means go back 1 step. He ends at step ${target} (starting from 0). How many times did he see green?`,
+      ...makeMC(green, [p, green+1, tosses]),
+      exp: `Let p = purples. 3p − 1×(${tosses}−p) = ${target}, so 4p = ${target+tosses}, p = ${p}, green = ${tosses}−${p} = ${green}.` }; },
+  // Real Kangaroo: Repeating vest+backpack pattern (LCM)
+  () => { const patA = pick([2,3]); const patB = pick([3,4]); const total = pick([24,30,36,48,60]);
+    const cycle = (patA*patB)/gcd(patA,patB);
+    const count = Math.floor(total/cycle);
+    return { q: `${total} pupils line up. Their hats repeat every ${patA} (red, blue${patA===3?', green':''}) and their scarves repeat every ${patB} (${patB===3?'gold, silver, bronze':'gold, silver, bronze, black'}). How many pupils have both a red hat AND a gold scarf?`,
+      ...makeMC(count, [total/patA, total/patB, count+1]),
+      exp: `A pupil has red hat and gold scarf at positions 1, ${cycle+1}, ${2*cycle+1}, … i.e. every ${cycle} pupils. Count = ${total}÷${cycle} = ${count}.` }; },
+  // Real Kangaroo: Penguin feeding — multi-day fish distribution
+  () => { const perDay = pick([7,9,11]); const big = Math.ceil(perDay/2); const small = perDay-big;
+    const fish1 = rand(15,30);
+    let x=-1, y=-1;
+    for(let a=0;a<=10;a++) for(let b=0;b<=10;b++) if(big*a+small*b===fish1) { x=a; y=b; break; }
+    if(x<0) return g4_medium[1]();
+    const fish2 = small*x + big*y;
+    return { q: `A penguin brings ${perDay} fish daily for 2 chicks. The first chick he sees gets ${big} fish, the second gets ${small}. Over several days one chick ate ${fish1} fish. How many did the other chick eat?`,
+      ...makeMC(fish2, [fish1, fish2+1, perDay*(x+y)-fish1-1]),
+      exp: `In ${x+y} days total fish = ${perDay*(x+y)}. If one ate ${fish1}, other ate ${perDay*(x+y)} − ${fish1} = ${fish2}.` }; },
+  // Kangaroo: building a staircase — how many blocks needed
+  () => { const steps = rand(4,7); const blocks = steps*(steps+1)/2;
+    return { q: `A staircase has ${steps} steps. The 1st step uses 1 block, the 2nd uses 2, and so on. How many blocks are needed in total?`,
+      ...makeMC(blocks, [steps*steps, blocks+1, steps*2]),
+      exp: `1+2+…+${steps} = ${steps}×${steps+1}/2 = ${blocks} blocks.` }; },
+  // Kangaroo: digital clock — how many times does a digit appear
+  () => { const digit = rand(1,5); let count=0;
+    for(let h=1;h<=12;h++) for(let m=0;m<60;m++) { const s=`${h}${String(m).padStart(2,'0')}`; for(const c of s) if(c===String(digit)) count++; }
+    return { q: `From 1:00 to 12:59, how many times does the digit ${digit} appear on a digital clock display?`,
+      ...makeMC(count, [count+10, count-5, 12*60]),
+      exp: `Counting digit ${digit} in all clock readings from 1:00 to 12:59 gives ${count}.` }; },
+  // Kangaroo: logical constraint — who sits where
+  () => { const names = shuffle(['Ali','Bushra','Clara','Dan']);
+    const leftOf = [names[0],names[1]]; const rightOf = [names[2],names[3]];
+    return { q: `4 friends sit in a row. ${leftOf[0]} is to the left of ${leftOf[1]}. ${rightOf[0]} is at the right end. ${names[3]} is not next to ${names[0]}. Who sits at the left end?`,
+      options: shuffle(names),
+      answer: names[0],
+      exp: `Working through the constraints: ${names[0]} must be at the left end.` }; },
+  // Kangaroo: rectangle cut into squares — minimum squares
+  () => { const a = rand(2,4), b = a+rand(1,3); const area = a*b;
+    // min squares to tile a×b rectangle
+    const minSq = (a===2&&b===3)?3:(a===2&&b===4)?2:(a===2&&b===5)?4:(a===3&&b===4)?4:(a===3&&b===5)?5:(a===3&&b===6)?2:(a===4&&b===5)?5:(a===4&&b===6)?3:(a===4&&b===7)?5:a+b;
+    return { q: `A ${a}×${b} rectangle is cut into the fewest possible squares (of any size). What is the fewest number of squares?`,
+      ...makeMC(minSq, [a*b, minSq+1, a]),
+      exp: `The ${a}×${b} rectangle can be cut into a minimum of ${minSq} squares.` }; },
+  // Kangaroo: water pouring — two jugs
+  () => { const big = pick([5,7,8]); const small = pick([3,4,5]);
+    if(small>=big) return g4_medium[0]();
+    const target = big-small;
+    return { q: `You have a ${big}-litre jug and a ${small}-litre jug. Using only these two jugs, what is the smallest amount of water you can measure exactly?`,
+      ...makeMC(gcd(big,small), [1, small, big-small]),
+      exp: `Using the two jugs, you can measure any multiple of GCD(${big},${small}) = ${gcd(big,small)} litre.` }; },
+  // Kangaroo: page numbering — how many digits to number a book
+  () => { const pages = rand(30,99); let digits=0;
+    if(pages<=9) digits=pages; else digits=9+2*(pages-9);
+    return { q: `A book has ${pages} pages numbered 1 to ${pages}. How many digits are needed to number all the pages?`,
+      ...makeMC(digits, [pages, pages*2, digits+1]),
+      exp: `Pages 1–9: 9 digits. Pages 10–${pages}: ${pages-9}×2 = ${(pages-9)*2} digits. Total = ${digits}.` }; },
+  // Kangaroo: handshakes at a party (medium version)
+  () => { const n = rand(4,6); const h = n*(n-1)/2;
+    return { q: `At a party, every person shakes hands with every other person exactly once. With ${n} people, how many handshakes happen?`,
+      ...makeMC(h, [n*n, n*(n-1), h+1]),
+      exp: `Each of ${n} people shakes with ${n-1} others, but each handshake is counted twice: ${n}×${n-1}/2 = ${h}.` }; },
+  // Kangaroo: which shape cannot tile a floor
+  () => { const shapes = shuffle([
+      {name:'regular pentagon', can:false},
+      {name:'equilateral triangle', can:true},
+      {name:'square', can:true},
+      {name:'regular hexagon', can:true}
+    ]);
+    return { q: `Which of these regular shapes CANNOT tile a flat floor by itself with no gaps or overlaps?`,
+      options: shapes.map(s=>s.name),
+      answer: shapes.find(s=>!s.can).name,
+      exp: `Regular pentagons cannot tile the plane. Only triangles, squares, and hexagons among regular polygons can.` }; },
+];
+
+// ---------- GRADE 4 HARD (Kangaroo style) ----------
+const g4_hard = [
+  () => { const two = rand(3,8), four = rand(3,8);
+    const total = two+four, legs = 2*two+4*four;
+    const story = pick([
+      ['chickens','rabbits','a farmer','the barnyard'],['ducks','sheep','a zookeeper','the pen'],['sparrows','cats','a child','the garden'],['lizards','beetles','a scientist','the lab']
+    ]);
+    return { q: `${story[2]} sees ${total} heads and ${legs} legs in ${story[3]} (${story[0]} and ${story[1]}). How many ${story[1]} are there?`,
+      ...makeMC(four, [two, total-four-1, four+1]),
+      exp: `If all were ${story[0]}: ${total}×2 = ${total*2} legs. Extra = ${legs-total*2}. Each ${story[1].slice(0,-1)} has 2 extra legs: ${legs-total*2}/2 = ${four}.` }; },
+  () => { const red = rand(3,5), blue = rand(3,5), green = rand(3,5);
+    const ans = 4; // 3 colors + 1 more guarantees a pair
+    return { q: `A drawer has ${red} red, ${blue} blue, and ${green} green socks mixed together in the dark. What is the smallest number of socks you must take out to be sure of having a matching pair?`,
+      ...makeMC(ans, [3, 2, red+blue+green]),
+      exp: `With 3 colours, taking 3 socks might give one of each. Taking a 4th must match one of the first three. So answer = 4.` }; },
+  () => { const ans = 12;
+    return { q: `A big cube is made of 27 small cubes (3 × 3 × 3) and is painted red on all outside faces. How many small cubes have exactly 2 faces painted red?`,
+      ...makeMC(ans, [8, 6, 1]),
+      exp: `Corner cubes (8) have 3 painted faces, edge-middle cubes have 2 painted, face centres have 1, centre of big cube has 0. There are 12 edges → 12 cubes with 2 painted faces.` }; },
+  () => { const x = rand(2,9); const a = x+1, b = x+2;
+    const sum = x+a+b;
+    return { q: `The sum of three consecutive whole numbers is ${sum}. What is the largest of them?`,
+      ...makeMC(b, [x, a, b+1]),
+      exp: `Let the numbers be n, n+1, n+2. Then 3n+3 = ${sum}, so n = ${x}. Largest = n+2 = ${b}.` }; },
+  () => { const n = rand(4,7); const games = n*(n-1)/2;
+    return { q: `In a small tournament, every team plays every other team exactly once. If there are ${n} teams, how many games are played in total?`,
+      ...makeMC(games, [n*(n-1), n, games+1]),
+      exp: `Number of pairs = n(n−1)/2 = ${n}×${n-1}/2 = ${games} games.` }; },
+  () => { // magic-triangle-ish: A+B=S1, B+C=S2, A+C=S3 → solve for A
+    const A=rand(1,6), B=rand(1,6), C=rand(1,6);
+    const s1=A+B, s2=B+C, s3=A+C;
+    return { q: `Three numbers A, B, C satisfy: A + B = ${s1}, B + C = ${s2}, A + C = ${s3}. What is A?`,
+      ...makeMC(A, [B, C, A+1]),
+      exp: `Add all three: 2(A+B+C) = ${s1+s2+s3}, so A+B+C = ${(s1+s2+s3)/2}. Then A = (A+B+C) − (B+C) = ${(s1+s2+s3)/2} − ${s2} = ${A}.` }; },
+  () => { const names = ['Anna','Ben','Clara','Dan']; // shuffle order
+    const order = shuffle(names);
+    const middleIsIndex = 1; // position 2 out of 3 in a row of 3 is middle, but we have 4 so skip; use row of 3
+    const trio = order.slice(0,3);
+    // Clue: first is NOT in middle, last is next to middle
+    const middle = trio[1];
+    return { q: `${trio[0]}, ${trio[1]}, and ${trio[2]} are sitting in a row. ${trio[0]} is at one end and ${trio[2]} is at the other end. Who is in the middle?`,
+      options: shuffle(trio.concat(['Nobody'])),
+      answer: middle,
+      exp: `If ${trio[0]} and ${trio[2]} are at the two ends, the only one left for the middle seat is ${middle}.` }; },
+  () => { const n = rand(4,6); const diag = n*(n-3)/2;
+    return { q: `How many diagonals does a regular polygon with ${n} sides have?`,
+      ...makeMC(diag, [n, n*(n-1)/2, diag+1]),
+      exp: `Diagonals = n(n−3)/2 = ${n}×${n-3}/2 = ${diag}.` }; },
+  // Classic Kangaroo: "nice numbers" — counting 2-digit numbers with a property (digit sum)
+  () => { const target = pick([7,8,9,10]);
+    let count = 0;
+    for (let n=10;n<=99;n++){ const s = Math.floor(n/10)+n%10; if (s===target) count++; }
+    return { q: `How many two-digit whole numbers have a digit sum equal to ${target}?`,
+      ...makeMC(count, [target, count+1, count-1]),
+      exp: `List them: all (a,b) with a+b=${target}, a from 1 to 9, b from 0 to 9. There are exactly ${count} such numbers.` }; },
+  // Classic Kangaroo: chocolate bar corner pieces removed
+  () => { const r = rand(4,6), c = rand(4,6); const total = r*c; const corners = 4; const ans = total-corners;
+    return { q: `A chocolate bar is made of ${r} × ${c} square pieces. John eats the 4 corner pieces. How many pieces are left?`,
+      ...makeMC(ans, [total, ans-1, ans+1]),
+      exp: `Total = ${r}×${c} = ${total} pieces. After 4 corners: ${total}−4 = ${ans}.` }; },
+  // Real Kangaroo: Missing digits in a sum (cryptarithmetic-lite)
+  () => { const a = rand(100,400), b = rand(100,400), c = rand(100,400); const total = a+b+c;
+    const d1 = Math.floor(a/100)%10, d2 = Math.floor(b/10)%10, d3 = c%10;
+    const digitSum = d1+d2+d3;
+    return { q: `Three numbers add up to ${total}. Part of each number is hidden: _${String(a).slice(1)}, ${String(b)[0]}_${String(b)[2]}, ${String(c).slice(0,2)}_. The missing digits are ${d1}, ${d2}, ${d3}. What is their sum?`,
+      ...makeMC(digitSum, [digitSum+1, digitSum-1, digitSum+2]),
+      exp: `The full numbers are ${a}, ${b}, ${c}. Missing digits: ${d1}+${d2}+${d3} = ${digitSum}.` }; },
+  // Real Kangaroo: Balance/weight puzzle — 3 pairs weighed
+  () => { const w1 = rand(2,5), w2 = rand(3,7), w3 = rand(4,9);
+    if (w1===w2||w2===w3||w1===w3) return g4_hard[0]();
+    const p1=w1+w2, p2=w2+w3, p3=w1+w3; const sum = (p1+p2+p3)/2;
+    return { q: `Bushra weighs three blocks in pairs: first pair = ${p1} g, second pair = ${p2} g, third pair = ${p3} g. How much do all 3 blocks weigh together?`,
+      ...makeMC(sum, [p1+p2+p3, sum+1, sum-1]),
+      exp: `Adding all pairs: ${p1}+${p2}+${p3} = ${p1+p2+p3}. Each block counted twice, so total = ${p1+p2+p3}/2 = ${sum} g.` }; },
+  // Real Kangaroo: Discs/towers — how many towers of K from N different sizes
+  () => { const n = rand(4,6); const k = 3; const ans = n*(n-1)*(n-2)/6;
+    return { q: `Amani has ${n} discs of different sizes. She builds a tower of ${k} discs so that each disc is smaller than the one below. How many different towers can she make?`,
+      ...makeMC(ans, [n, n*(n-1)/2, ans+1]),
+      exp: `Choose ${k} discs from ${n}; the order is forced (big→small). C(${n},${k}) = ${ans}.` }; },
+  // Kangaroo: dart balloons — which balloon must be hit (constraint satisfaction)
+  () => { const vals = shuffle([3,5,7,9,11,13]).slice(0,5); const target = vals[0]+vals[2]+vals[4];
+    const subsets = [];
+    for(let i=0;i<5;i++) for(let j=i+1;j<5;j++) for(let k=j+1;k<5;k++) if(vals[i]+vals[j]+vals[k]===target) subsets.push([i,j,k]);
+    if(subsets.length===0) return g4_hard[0]();
+    const mustHave = [0,1,2,3,4].filter(idx => subsets.every(s=>s.includes(idx)));
+    if(mustHave.length===0) return g4_hard[0]();
+    const ans = vals[mustHave[0]];
+    // Ensure answer is in the 4 options shown
+    const others = vals.filter(v => v !== ans);
+    const opts = shuffle([String(ans), ...shuffle(others.map(String)).slice(0,3)]);
+    return { q: `Khalid throws 3 darts at balloons worth ${vals.join(', ')} points. He scores exactly ${target}. Which balloon did he DEFINITELY hit?`,
+      options: opts,
+      answer: String(ans),
+      exp: `Try all combinations of 3 balloons summing to ${target}. The balloon worth ${ans} appears in every valid combination.` }; },
+  // Kangaroo: ages puzzle — "in X years, A will be Y times as old as B"
+  () => { const childNow = rand(3,8); const parentNow = rand(28,42);
+    const ratio = 3; const yrs = (parentNow-ratio*childNow)/(ratio-1);
+    if(!Number.isInteger(yrs)||yrs<1||yrs>20) return g4_hard[0]();
+    return { q: `A parent is ${parentNow} years old and their child is ${childNow}. In how many years will the parent be exactly ${ratio} times as old as the child?`,
+      ...makeMC(yrs, [yrs+1, parentNow-childNow, yrs*2]),
+      exp: `${parentNow}+y = ${ratio}(${childNow}+y) → y = (${parentNow}−${ratio*childNow})/${ratio-1} = ${yrs}.` }; },
+  // Kangaroo: river crossing logic puzzle
+  () => { const trips = pick([{carry:'a wolf, a goat, and a cabbage', ans:7}, {carry:'3 missionaries and 3 cannibals with a 2-person boat', ans:11}]);
+    return { q: `In the classic puzzle, a farmer must take ${trips.carry} across a river. He can only carry one item/group per trip. What is the minimum number of one-way crossings?`,
+      ...makeMC(trips.ans, [trips.ans-2, trips.ans+2, trips.ans+1]),
+      exp: `The classic solution requires ${trips.ans} crossings to safely transport everyone.` }; },
+  // Kangaroo: path counting on a grid (from top-left to bottom-right, only right/down)
+  () => { const r = rand(2,3), c = rand(2,3);
+    const paths = (function f(n,k){let res=1;for(let i=0;i<k;i++){res=res*(n-i)/(i+1);} return res;})(r+c,r);
+    return { q: `On a ${r+1}×${c+1} grid, how many shortest paths go from the top-left corner to the bottom-right corner, moving only right or down?`,
+      ...makeMC(paths, [r*c, paths+1, (r+1)*(c+1)]),
+      exp: `You must make ${r} down moves and ${c} right moves in some order. That's C(${r+c},${r}) = ${paths} paths.` }; },
+  // Kangaroo: coin puzzle — what's the minimum number of coins for any amount
+  () => { const target = rand(1,99);
+    // Greedy: 50,20,10,5,2,1
+    let rem = target, coins = 0;
+    [50,20,10,5,2,1].forEach(d => { coins += Math.floor(rem/d); rem %= d; });
+    return { q: `Using coins of 1, 2, 5, 10, 20, and 50, what is the fewest coins needed to make exactly ${target} pence?`,
+      ...makeMC(coins, [coins+1, coins+2, target]),
+      exp: `Using greedy: ${target} pence needs ${coins} coins.` }; },
+  // Kangaroo: letter/number code — each letter = a digit
+  () => { const a = rand(2,5), b = rand(2,5); const prod = a*b;
+    return { q: `Each letter stands for a different digit. If A × B = ${prod} and A + B = ${a+b}, what is A × A + B × B?`,
+      ...makeMC(a*a+b*b, [prod*2, (a+b)*(a+b), a*a+b*b+1]),
+      exp: `A=${a}, B=${b} satisfy both conditions. A²+B² = ${a*a}+${b*b} = ${a*a+b*b}.` }; },
+  // Kangaroo: net of a cube — which face is opposite
+  () => { const pairs = [['Top','Bottom'],['Front','Back'],['Left','Right']];
+    const pair = pick(pairs);
+    const others = ['Top','Front','Right','Back','Left','Bottom'].filter(f=>f!==pair[0]&&f!==pair[1]);
+    const opts = shuffle([pair[1], ...shuffle(others).slice(0,3)]);
+    return { q: `When a cube net is folded, which face is opposite to "${pair[0]}"?`,
+      options: opts,
+      answer: pair[1],
+      exp: `"${pair[0]}" is opposite "${pair[1]}" on a standard cube.` }; },
+  // Kangaroo: logical deduction — who always tells truth
+  () => { const names = shuffle(['Ali','Bushra','Carla']);
+    return { q: `${names[0]} says "I am a truth-teller." ${names[1]} says "${names[0]} is lying." ${names[2]} says "${names[1]} is lying." If exactly one person lies, who is the liar?`,
+      options: shuffle([...names, 'Cannot be determined']),
+      answer: names[1],
+      exp: `If ${names[1]} is the liar: ${names[0]} tells truth (consistent), ${names[2]} correctly says ${names[1]} lies. Only one liar — ${names[1]}.` }; },
+];
+
+// ---------- GRADE 6 EASY (Kangaroo style) ----------
+const g6_easy = [
+  () => { const area = pick([16,25,36,49,64,81]); const side = Math.sqrt(area); const p = 4*side;
+    return { q: `A square has area ${area} cm². What is its perimeter?`,
+      ...makeMC(p, [area, 2*side, p+1]),
+      exp: `Side = √${area} = ${side} cm. Perimeter = 4 × ${side} = ${p} cm.` }; },
+  () => { const n = pick([20,40,50,80,100]); const pct = pick([10,20,25,50]);
+    const ans = n*pct/100;
+    return { q: `What is ${pct}% of ${n}?`,
+      ...makeMC(ans, [n-ans, ans*2, ans+5]),
+      exp: `${pct}% of ${n} = (${pct}/100) × ${n} = ${ans}.` }; },
+  () => { const avg = rand(6,10); const n = 5; const sum = avg*n; const newVal = rand(sum+1, sum+10);
+    const newAvg = +((sum+newVal)/(n+1)).toFixed(1);
+    return { q: `The mean of 5 numbers is ${avg}. A sixth number ${newVal} is added to the list. What is the new mean?`,
+      ...makeMC(newAvg, [avg, +(avg+1).toFixed(1), newVal]),
+      exp: `Sum of first 5 = 5×${avg} = ${sum}. New total = ${sum}+${newVal} = ${sum+newVal}. New mean = ${sum+newVal}/6 = ${newAvg}.` }; },
+  () => { const a=pick([3,4,6]), b=pick([3,4,6]); if(a===b) return g6_easy[0]();
+    const lcmAB = (a*b)/gcd(a,b);
+    const num = (lcmAB/a)+(lcmAB/b); const g = gcd(num,lcmAB);
+    return { q: `What is 1/${a} + 1/${b} as a single fraction (in lowest terms)?`,
+      ...makeMC(`${num/g}/${lcmAB/g}`, [`2/${a+b}`, `${num}/${lcmAB+1}`, `1/${a+b}`]),
+      exp: `Common denominator = ${lcmAB}. 1/${a}=${lcmAB/a}/${lcmAB}, 1/${b}=${lcmAB/b}/${lcmAB}. Sum = ${num}/${lcmAB} = ${num/g}/${lcmAB/g}.` }; },
+  () => { const hour = pick([3,6,9]); const angle = hour*30;
+    return { q: `What is the angle between the hour and minute hand of a clock at exactly ${hour}:00?`,
+      ...makeMC(`${angle>180?360-angle:angle}°`, [`${angle+30}°`, `${Math.abs(angle-30)}°`, `${angle*2}°`]),
+      exp: `Each hour mark = 30°. At ${hour}:00, angle = ${hour} × 30° = ${angle}°.` }; },
+  () => { const x = rand(3,9); const b = rand(2,6); const c = x+b;
+    return { q: `If x + ${b} = ${c}, what is the value of x?`,
+      ...makeMC(x, [c, b, x+1]),
+      exp: `x = ${c} − ${b} = ${x}.` }; },
+  () => { const boys=rand(3,6), girls=boys+rand(1,4); const g2=gcd(boys,girls);
+    return { q: `In a class there are ${boys} boys and ${girls} girls. What is the ratio of boys to girls in simplest form?`,
+      ...makeMC(`${boys/g2}:${girls/g2}`, [`${girls}:${boys}`, `${boys}:${girls}`, `${boys+1}:${girls}`]),
+      exp: `GCD(${boys},${girls}) = ${g2}. Ratio = ${boys/g2}:${girls/g2}.` }; },
+  () => { const n = pick([4,5,6,8,9]); const sq = n*n;
+    return { q: `What is ${n}²?`,
+      ...makeMC(sq, [2*n, n+n, sq+1]),
+      exp: `${n}² = ${n} × ${n} = ${sq}.` }; },
+  () => { const km = pick([60,90,120,180]); const h = pick([2,3]); const speed = km/h;
+    return { q: `A cyclist travels ${km} km in ${h} hours. What is her average speed?`,
+      ...makeMC(`${speed} km/h`, [`${km-h} km/h`, `${speed+5} km/h`, `${km*h} km/h`]),
+      exp: `Speed = distance ÷ time = ${km} ÷ ${h} = ${speed} km/h.` }; },
+  () => { const num = pick([4,6,8,9]); const den = pick([12,16,18,24]);
+    const g = gcd(num,den); const sa=num/g, sb=den/g;
+    return { q: `Write the fraction ${num}/${den} in its simplest form.`,
+      ...makeMC(`${sa}/${sb}`, [`${num}/${den}`, `${sa+1}/${sb}`, `${sa}/${sb+1}`]),
+      exp: `GCD(${num},${den}) = ${g}. ${num}/${den} = ${sa}/${sb}.` }; },
+  // Classic Kangaroo: symmetry of letters/shapes
+  () => { const set = [['A','line'],['H','both'],['O','both'],['Z','point'],['T','line'],['X','both'],['N','point'],['S','point']];
+    const ch = pick(set);
+    const q_ = `Which type of symmetry does the capital letter "${ch[0]}" have?`;
+    const opts = ['Line symmetry only','Point symmetry only','Both line and point symmetry','No symmetry'];
+    const ansMap = {line:'Line symmetry only', point:'Point symmetry only', both:'Both line and point symmetry'};
+    return { q: q_, options: shuffle(opts), answer: ansMap[ch[1]],
+      exp: `The capital letter "${ch[0]}" has ${ch[1]==='both'?'both line and point symmetry':ch[1]+' symmetry only'}.` }; },
+  // Classic Kangaroo: pizza slices shared
+  () => { const slices = pick([8,10,12]); const a = rand(1,3), b = rand(1,3); const left = slices-a-b;
+    return { q: `A pizza is cut into ${slices} equal slices. Anna eats ${a} slice${a>1?'s':''} and Ben eats ${b} slice${b>1?'s':''}. What fraction of the pizza is left?`,
+      ...makeMC(`${left}/${slices}`, [`${a+b}/${slices}`, `${left}/${a+b}`, `${left+1}/${slices}`]),
+      exp: `Slices eaten = ${a}+${b} = ${a+b}. Left = ${slices}−${a+b} = ${left}. Fraction = ${left}/${slices}.` }; },
+  // Real Kangaroo: Hopping game — every Nth square (modular arithmetic)
+  () => { const period = pick([3,4,5]); const target = rand(10,25); const ans = target % period === 0 ? 'Yes' : 'No';
+    const which = target - (target % period); const next = which + period;
+    return { q: `In a hopping game, every ${period}th square is marked with a star (squares ${period}, ${period*2}, ${period*3}, …). Is square ${target} marked?`,
+      options: shuffle(['Yes','No', `Only if ${target} is even`, `Only if ${target} is odd`]),
+      answer: ans,
+      exp: `${target} ÷ ${period} = ${(target/period).toFixed(2)}. ${target % period === 0 ? `${target} is a multiple of ${period}, so yes.` : `${target} is not a multiple of ${period}, so no.`}` }; },
+  // Real Kangaroo: Shortest drawing without lifting pencil (Euler path length)
+  () => { const a = rand(2,5), b = rand(3,6), c = rand(1,3); const shortest = a+b+c+Math.min(a,b,c);
+    return { q: `Mona wants to draw a figure made of 3 line segments (lengths ${a} cm, ${b} cm, and ${c} cm) that share a common endpoint, without lifting her pencil. What is the shortest total length she must draw?`,
+      ...makeMC(`${shortest} cm`, [`${a+b+c} cm`, `${a+b+c+a} cm`, `${2*(a+b+c)} cm`]),
+      exp: `She must retrace the shortest segment once. Total = ${a}+${b}+${c}+${Math.min(a,b,c)} = ${shortest} cm.` }; },
+  // Real Kangaroo: Hotel room digit counting
+  () => { const digit = pick([1,2,3]); const maxRoom = rand(25,40);
+    let count = 0;
+    for (let r=1; r<=maxRoom; r++) { const s = String(r); for (const ch of s) if (parseInt(ch)===digit) count++; }
+    return { q: `A hotel has rooms numbered 1 to ${maxRoom}. How many times does the digit ${digit} appear in the room numbers?`,
+      ...makeMC(count, [count+1, count-1, maxRoom]),
+      exp: `Count digit ${digit} in each number from 1 to ${maxRoom}. It appears ${count} times.` }; },
+  // Kangaroo: negative numbers introduction
+  () => { const a = rand(3,10); const b = rand(a+1,a+8); const ans = a-b;
+    return { q: `What is ${a} − ${b}?`,
+      ...makeMC(ans, [b-a, a+b, ans-1]),
+      exp: `${a} − ${b} = ${ans}.` }; },
+  // Kangaroo: order of operations
+  () => { const a=rand(2,6), b=rand(2,6), c=rand(1,4); const ans=a+b*c;
+    return { q: `What is ${a} + ${b} × ${c}? (Remember order of operations!)`,
+      ...makeMC(ans, [(a+b)*c, a*b+c, ans+1]),
+      exp: `Multiplication first: ${b}×${c} = ${b*c}. Then ${a}+${b*c} = ${ans}.` }; },
+  // Kangaroo: which number is NOT a factor
+  () => { const n = pick([12,18,20,24,30]); const factors = []; for(let i=1;i<=n;i++) if(n%i===0) factors.push(i);
+    const nonFactor = [n+1, n-1, n+2].find(x=>n%x!==0);
+    const shown = shuffle([...factors.slice(1,4), nonFactor]);
+    return { q: `Which of these is NOT a factor of ${n}?`,
+      options: shown.map(String),
+      answer: String(nonFactor),
+      exp: `${n} ÷ ${nonFactor} is not a whole number, so ${nonFactor} is not a factor of ${n}.` }; },
+  // Kangaroo: complement angle
+  () => { const a = rand(20,70); const comp = 90-a;
+    return { q: `Two angles are complementary (they add up to 90°). One angle is ${a}°. What is the other?`,
+      ...makeMC(`${comp}°`, [`${180-a}°`, `${a}°`, `${comp+10}°`]),
+      exp: `Complementary means they sum to 90°. Other = 90° − ${a}° = ${comp}°.` }; },
+  // Kangaroo: prime or composite
+  () => { const n = pick([17,19,23,29,31,37,41,43]);
+    return { q: `Is ${n} a prime number or a composite number?`,
+      options: shuffle(['Prime','Composite','Neither','Both']),
+      answer: 'Prime',
+      exp: `${n} has no divisors other than 1 and itself, so it is prime.` }; },
+  // Kangaroo: temperature change
+  () => { const start = rand(-5,10); const change = rand(5,15); const end = start+change;
+    return { q: `The temperature at 6 AM was ${start}°C. By noon it had risen by ${change}°C. What was the noon temperature?`,
+      ...makeMC(`${end}°C`, [`${start-change}°C`, `${change-start}°C`, `${end+1}°C`]),
+      exp: `${start}°C + ${change}°C = ${end}°C.` }; },
+];
+
+// ---------- GRADE 6 MEDIUM (Kangaroo style) ----------
+const g6_medium = [
+  () => { const price = pick([20,40,50,80,100]); const pct = pick([10,20,25]);
+    const sale = price*(100-pct)/100;
+    const item = pick(['jacket','laptop','bicycle','phone','watch','bag']);
+    return { q: `A ${item} that normally costs ${price} zeds is on sale with a ${pct}% discount. What is its sale price?`,
+      ...makeMC(`${sale} zeds`, [`${price-pct} zeds`, `${price*pct/100} zeds`, `${sale+1} zeds`]),
+      exp: `Discount = ${pct}% of ${price} = ${price*pct/100} zeds. Sale price = ${price} − ${price*pct/100} = ${sale} zeds.` }; },
+  () => { const ratio = pick([[3,5],[2,3],[1,4],[3,7]]); const unit = rand(4,8); const total = (ratio[0]+ratio[1])*unit;
+    const girls = ratio[1]*unit;
+    return { q: `The ratio of boys to girls in a class is ${ratio[0]}:${ratio[1]}. There are ${total} students altogether. How many girls are there?`,
+      ...makeMC(girls, [ratio[0]*unit, total/2, girls+1]),
+      exp: `Total parts = ${ratio[0]}+${ratio[1]} = ${ratio[0]+ratio[1]}. Each part = ${total}/${ratio[0]+ratio[1]} = ${unit}. Girls = ${ratio[1]} × ${unit} = ${girls}.` }; },
+  () => { const a = rand(2,5); const x = rand(2,6); const rhs = a*(x+3);
+    return { q: `Solve for x: ${a}(x + 3) = ${rhs}`,
+      ...makeMC(x, [x+1, rhs/a, x-1]),
+      exp: `Divide both sides by ${a}: x + 3 = ${rhs/a}, so x = ${rhs/a} − 3 = ${x}.` }; },
+  () => { const s1 = rand(40,60), s2 = rand(40,60), t = rand(2,4); const dist = (s1+s2)*t;
+    return { q: `Two trains leave the same station at the same time, travelling in opposite directions. One goes at ${s1} km/h and the other at ${s2} km/h. How far apart are they after ${t} hours?`,
+      ...makeMC(dist, [s1*t, s2*t, dist+t]),
+      exp: `They separate at ${s1}+${s2} = ${s1+s2} km/h. After ${t} h: ${s1+s2} × ${t} = ${dist} km apart.` }; },
+  () => { const base = rand(4,9), h = rand(4,9); const area = (base*h)/2;
+    return { q: `A triangle has base ${base} cm and height ${h} cm. What is its area?`,
+      ...makeMC(`${area} cm²`, [`${base*h} cm²`, `${base+h} cm²`, `${area+1} cm²`]),
+      exp: `Area of a triangle = ½ × base × height = ½ × ${base} × ${h} = ${area} cm².` }; },
+  () => { // missing value in average
+    const avg = rand(7,10), n = 5; const known = [rand(5,12),rand(5,12),rand(5,12),rand(5,12)];
+    const missing = avg*n - known.reduce((a,b)=>a+b,0);
+    if (missing<1 || missing>15) return g6_medium[0]();
+    return { q: `The mean of 5 numbers is ${avg}. Four of the numbers are ${known.join(', ')}. What is the fifth number?`,
+      ...makeMC(missing, [avg, missing+1, missing-1]),
+      exp: `Total of all 5 = 5 × ${avg} = ${avg*n}. Sum of known 4 = ${known.reduce((a,b)=>a+b,0)}. Missing = ${avg*n} − ${known.reduce((a,b)=>a+b,0)} = ${missing}.` }; },
+  () => { const n = pick([5,6]); const fact = [...Array(n).keys()].reduce((a,b)=>a*(b+1),1);
+    return { q: `In how many different orders can ${n} different books be arranged on a shelf?`,
+      ...makeMC(fact, [n*n, fact/2, n*(n-1)]),
+      exp: `Number of arrangements = ${n}! = ${[...Array(n).keys()].map(i=>i+1).join('×')} = ${fact}.` }; },
+  () => { const orig = rand(40,80); const pct = pick([20,25,50]); const final = Math.round(orig*(100+pct)/100);
+    return { q: `The price of a book is increased by ${pct}%, making it ${final} zeds. What was the original price?`,
+      ...makeMC(orig, [final-pct, Math.round(final*(100-pct)/100), orig+1]),
+      exp: `Original × (1 + ${pct}/100) = ${final}, so original = ${final} ÷ ${1+pct/100} = ${orig} zeds.` }; },
+  () => { const total = pick([30,36,42,48]); const frac = pick([[1,3],[1,4],[2,3]]);
+    const ans = total*frac[0]/frac[1];
+    return { q: `There are ${total} candies in a jar. ${frac[0]}/${frac[1]} of them are chocolate. How many chocolate candies are there?`,
+      ...makeMC(ans, [total-ans, total/2, ans+1]),
+      exp: `${frac[0]}/${frac[1]} of ${total} = (${total} ÷ ${frac[1]}) × ${frac[0]} = ${total/frac[1]} × ${frac[0]} = ${ans}.` }; },
+  () => { const n = rand(20,40); const d3=Math.floor(n/3), d5=Math.floor(n/5), d15=Math.floor(n/15);
+    const count = d3+d5-d15;
+    return { q: `How many whole numbers from 1 to ${n} are divisible by 3 or 5?`,
+      ...makeMC(count, [d3+d5, count+1, d15]),
+      exp: `Divisible by 3: ${d3}. By 5: ${d5}. By both (15): ${d15}. Inclusion–exclusion: ${d3}+${d5}−${d15} = ${count}.` }; },
+  // Classic Kangaroo: voting / weighted votes by age
+  () => { const ages = shuffle([rand(5,7), rand(8,10), rand(11,13)]);
+    const total = ages.reduce((a,b)=>a+b,0); const needed = Math.floor(total/2)+1;
+    return { q: `Three siblings (aged ${ages[0]}, ${ages[1]}, and ${ages[2]}) decide matters by voting. Each child gets as many votes as their age. What is the smallest number of votes needed to win the majority?`,
+      ...makeMC(needed, [Math.floor(total/2), total, needed+1]),
+      exp: `Total votes = ${ages[0]}+${ages[1]}+${ages[2]} = ${total}. A majority needs more than half, so at least ${needed} votes.` }; },
+  // Classic Kangaroo: number of 2-digit numbers with a digit property
+  () => { const target = pick([9,10,11,12]);
+    let count = 0;
+    for (let n=10;n<=99;n++){ if (Math.floor(n/10)+n%10===target) count++; }
+    return { q: `How many two-digit whole numbers have digits that add up to ${target}?`,
+      ...makeMC(count, [target, count+1, count-1]),
+      exp: `Count pairs (a,b) with a+b=${target}, a in 1..9, b in 0..9. There are ${count} such numbers.` }; },
+  // Real Kangaroo: Two overlapping identical rectangles form 3 squares
+  () => { const s = rand(3,6); const rectArea = s*s + s*s/2; // each rect has area 3s²/2
+    const newArea = 3*s*s;
+    const totalBoth = 2*rectArea;
+    return { q: `Two identical rectangles, each with area ${2*rectArea}, overlap to form a shape that can be divided into 3 identical squares. What is the area of the new (combined) shape?`,
+      ...makeMC(newArea, [2*rectArea, newArea+s, 4*s*s]),
+      exp: `Total of both = ${2*2*rectArea/2}×2 = ${2*rectArea*2/2}. Overlap = half of one rectangle = ${rectArea}. New area = ${2*rectArea} − ${rectArea} = … Actually, each square has area (2×${rectArea}/3). Three squares = area ${newArea}.` }; },
+  // Real Kangaroo: Tiling dimensions — find brick dimensions from wall size
+  () => { const brickL = rand(6,12); const brickW = rand(2, Math.floor(brickL/2));
+    const wallW = brickL * rand(3,5); const wallH = brickL*2 + brickW*3;
+    return { q: `A wall of width ${wallW} cm and height ${wallH} cm is tiled with identical bricks. ${wallW/brickL} bricks fit across the width. The height equals 2 brick-lengths plus 3 brick-widths. What is the area of one brick?`,
+      ...makeMC(brickL*brickW, [wallW*wallH, brickL*brickL, brickL*brickW+1]),
+      exp: `Brick length = ${wallW}/${wallW/brickL} = ${brickL} cm. Height: 2×${brickL} + 3w = ${wallH}, so 3w = ${wallH-2*brickL}, w = ${brickW}. Area = ${brickL}×${brickW} = ${brickL*brickW} cm².` }; },
+  // Real Kangaroo: Placing numbers 1-N in circles, line sums equal
+  () => { const S = pick([20,22,23,24]); const n = 10; const total = n*(n+1)/2; // 55
+    const center = (3*S - total)/2;
+    if (!Number.isInteger(center) || center<1 || center>10) return g6_medium[0]();
+    return { q: `Amal places numbers 1 to 10 in circles. Three lines pass through one central circle. Each line of 4 circles sums to ${S}. What number goes in the centre?`,
+      ...makeMC(center, [center+1, S-center, 10-center]),
+      exp: `Sum 1+…+10 = 55. Three lines sum to 3×${S} = ${3*S}. Centre is counted 3 times, so 2×centre = ${3*S}−55 = ${3*S-55}. Centre = ${center}.` }; },
+  // Kangaroo: probability of drawing a coloured ball
+  () => { const red=rand(2,5), blue=rand(2,5), green=rand(1,4); const total=red+blue+green;
+    const target = pick([['red',red],['blue',blue],['green',green]]);
+    const g = gcd(target[1],total);
+    return { q: `A bag has ${red} red, ${blue} blue, and ${green} green balls. What is the probability of drawing a ${target[0]} ball?`,
+      ...makeMC(`${target[1]/g}/${total/g}`, [`${target[1]}/${total+1}`, `${(total-target[1])/g}/${total/g}`, `1/${total}`]),
+      exp: `P(${target[0]}) = ${target[1]}/${total} = ${target[1]/g}/${total/g}.` }; },
+  // Kangaroo: exterior angle theorem
+  () => { const a=rand(30,70), b=rand(30,70); const ext=a+b;
+    return { q: `In a triangle, two interior angles are ${a}° and ${b}°. What is the exterior angle adjacent to the third angle?`,
+      ...makeMC(`${ext}°`, [`${180-a-b}°`, `${180-ext}°`, `${ext+10}°`]),
+      exp: `Exterior angle = sum of two non-adjacent interior angles = ${a}°+${b}° = ${ext}°.` }; },
+  // Kangaroo: scientific notation
+  () => { const coeff=rand(2,9); const exp_=rand(3,6); const val = coeff * Math.pow(10,exp_);
+    return { q: `How many zeros are in the number ${coeff} × 10^${exp_} when written in full?`,
+      ...makeMC(exp_, [exp_+1, exp_-1, coeff]),
+      exp: `${coeff} × 10^${exp_} = ${val}. There are ${exp_} zeros after the digit ${coeff}.` }; },
+  // Kangaroo: Pythagorean triple check
+  () => { const triples = [[3,4,5],[5,12,13],[6,8,10],[8,15,17]]; const t=pick(triples);
+    const k = rand(1,3); const sides = t.map(x=>x*k);
+    return { q: `A right triangle has legs ${sides[0]} cm and ${sides[1]} cm. What is the hypotenuse?`,
+      ...makeMC(`${sides[2]} cm`, [`${sides[0]+sides[1]} cm`, `${sides[2]+1} cm`, `${Math.round(Math.sqrt(sides[0]*sides[0]+sides[1]*sides[1]-1))} cm`]),
+      exp: `By Pythagoras: √(${sides[0]}²+${sides[1]}²) = √(${sides[0]*sides[0]}+${sides[1]*sides[1]}) = √${sides[2]*sides[2]} = ${sides[2]} cm.` }; },
+  // Kangaroo: profit and loss
+  () => { const cost=rand(40,80); const sell=rand(cost+5,cost+30); const profit=sell-cost;
+    const pctProfit = Math.round(100*profit/cost);
+    return { q: `A shopkeeper buys an item for ${cost} zeds and sells it for ${sell} zeds. What is the profit percentage?`,
+      ...makeMC(`${pctProfit}%`, [`${Math.round(100*profit/sell)}%`, `${profit}%`, `${pctProfit+5}%`]),
+      exp: `Profit = ${sell}−${cost} = ${profit}. Profit% = ${profit}/${cost}×100 ≈ ${pctProfit}%.` }; },
+  // Kangaroo: binary thinking — what power of 2
+  () => { const exp_=rand(4,10); const val=Math.pow(2,exp_);
+    return { q: `2 multiplied by itself gives 4, then 8, then 16... What is 2^${exp_}?`,
+      ...makeMC(val, [val*2, val/2, val+2]),
+      exp: `2^${exp_} = ${val}.` }; },
+  // Kangaroo: area of irregular shape by decomposition
+  () => { const a=rand(3,6), b=rand(3,6), c=rand(2,4); const totalArea = a*b + a*c;
+    return { q: `An L-shaped room has a ${a}×${b} rectangle joined to a ${a}×${c} rectangle. What is the total floor area?`,
+      ...makeMC(`${totalArea}`, [`${a*b*c}`, `${totalArea+a}`, `${a*(b+c)+1}`]),
+      exp: `Area = ${a}×${b} + ${a}×${c} = ${a*b}+${a*c} = ${totalArea}.` }; },
+  // Kangaroo: number of rectangles in a grid
+  () => { const m=rand(2,3), n=rand(2,3);
+    const rects = (m*(m+1)/2)*(n*(n+1)/2);
+    return { q: `How many rectangles (of all sizes) can be found in a ${m}×${n} grid of squares?`,
+      ...makeMC(rects, [m*n, rects+1, m*n*(m+1)*(n+1)]),
+      exp: `Choose 2 horizontal lines from ${m+1} and 2 vertical from ${n+1}: C(${m+1},2)×C(${n+1},2) = ${m*(m+1)/2}×${n*(n+1)/2} = ${rects}.` }; },
+];
+
+// ---------- GRADE 6 HARD (Kangaroo style) ----------
+const g6_hard = [
+  () => { const pctX = 20, valX = pick([12,16,20,24]); const x = valX*5;
+    const pctY = pick([25,30,40,50]); const ans = x*pctY/100;
+    return { q: `If ${pctX}% of a number is ${valX}, what is ${pctY}% of the same number?`,
+      ...makeMC(ans, [valX+pctY, x, ans+1]),
+      exp: `${pctX}% of x = ${valX} means x = ${valX} × 5 = ${x}. Then ${pctY}% of ${x} = ${ans}.` }; },
+  () => { const small = rand(15,30); const S = 2*small+1;
+    return { q: `The sum of two consecutive whole numbers is ${S}. What is the smaller number?`,
+      ...makeMC(small, [small+1, Math.floor(S/2)+1, small-1]),
+      exp: `Let the numbers be n and n+1. Then 2n+1 = ${S}, so n = (${S}−1)/2 = ${small}.` }; },
+  () => { const a=rand(8,12),b=rand(8,12); const L = (a*b)/gcd(a,b);
+    return { q: `What is the smallest positive number that is divisible by both ${a} and ${b}?`,
+      ...makeMC(L, [a*b, gcd(a,b), L+a]),
+      exp: `This is the LCM. GCD(${a},${b})=${gcd(a,b)}, so LCM = ${a}×${b}/${gcd(a,b)} = ${L}.` }; },
+  () => { // dice probability: sum = 7
+    return { q: `Two fair dice are rolled and the numbers on top are added. What is the probability that the sum is 7?`,
+      options: shuffle(['1/6','1/12','1/36','7/36']),
+      answer: '1/6',
+      exp: `Favourable pairs: (1,6),(2,5),(3,4),(4,3),(5,2),(6,1) = 6 outcomes out of 36. Probability = 6/36 = 1/6.` }; },
+  () => { const w1=rand(3,5), d1=rand(6,12); const w2=rand(2,6);
+    const d2 = (w1*d1)/w2;
+    if (!Number.isInteger(d2) || d2>30) return g6_hard[0]();
+    return { q: `${w1} workers can finish painting a house in ${d1} days. Working at the same rate, how many days would ${w2} workers need?`,
+      ...makeMC(d2, [d1, w1*d1, d2+1]),
+      exp: `Total work = ${w1}×${d1} = ${w1*d1} worker-days. With ${w2} workers: ${w1*d1}/${w2} = ${d2} days.` }; },
+  () => { const r = pick([3,5,7]); const sqArea = (2*r)*(2*r); const circle = +(Math.PI*r*r).toFixed(1);
+    const ans = +(sqArea - circle).toFixed(1);
+    return { q: `A circle of radius ${r} cm is inscribed inside a square. What is the area (in cm², to 1 d.p.) inside the square but outside the circle? (Use π ≈ 3.14)`,
+      ...makeMC(ans, [sqArea, circle, +(ans+1).toFixed(1)]),
+      exp: `Square side = 2×${r} = ${2*r}, area = ${sqArea}. Circle area = π×${r}² ≈ ${circle}. Shaded = ${sqArea} − ${circle} ≈ ${ans}.` }; },
+  () => { // age puzzle
+    const now = rand(10,14); const father = 4*now;
+    const yrs = rand(3,8); const ans = now+yrs;
+    return { q: `A father is ${father} years old and his daughter is ${now}. In how many years will the father be exactly 3 times as old as his daughter?`,
+      ...(() => { const f=father,d=now; // f+y = 3(d+y) → y = (f-3d)/2
+        const y = (f-3*d)/2; return makeMC(y, [y+1, y-1, 2*y]); })(),
+      exp: `Let y = years from now. Then ${father}+y = 3(${now}+y) → ${father}+y = ${3*now}+3y → y = (${father}−${3*now})/2 = ${(father-3*now)/2}.` }; },
+  () => { const n = rand(4,6); const h = n*(n-1)/2;
+    return { q: `At a small party, every person shakes hands with every other person exactly once. If there are ${n} people, how many handshakes occur?`,
+      ...makeMC(h, [n*(n-1), n, h+1]),
+      exp: `Number of pairs = C(${n},2) = ${n}×${n-1}/2 = ${h}.` }; },
+  () => { const first=rand(2,5), diff=rand(3,5), pos=rand(10,20);
+    const term = first+(pos-1)*diff;
+    return { q: `In the sequence ${first}, ${first+diff}, ${first+2*diff}, ${first+3*diff}, …, each term increases by ${diff}. What is the ${pos}th term?`,
+      ...makeMC(term, [term+diff, term-diff, first*pos]),
+      exp: `nth term = first + (n−1)×d = ${first} + ${pos-1}×${diff} = ${term}.` }; },
+  // Classic Kangaroo Benjamin: "nice" three-digit numbers — middle digit > sum of outer digits
+  () => {
+    let count = 0;
+    for (let a=1;a<=9;a++) for (let b=0;b<=9;b++) for (let c=0;c<=9;c++) if (b>a+c) count++;
+    // 240
+    return { q: `A three-digit number is called "nice" if its middle digit is greater than the sum of its first and last digits. How many three-digit nice numbers are there?`,
+      ...makeMC(count, [count+10, count-10, 100]),
+      exp: `For each a (1–9) and c (0–9), count b with b>a+c. Summing over all cases gives ${count} nice numbers.` }; },
+  // Classic Kangaroo: Mary builds big cube from coloured small cubes
+  () => { const n = 3; const total = n*n*n; const whiteNeeded = (n-2)*(n-2)*(n-2); // only 1 centre cube in 3×3×3
+    return { q: `Mary has 10 white cubes and 17 grey cubes (same size). She glues them all together to build a 3 × 3 × 3 cube with as few white cubes showing on the outside as possible. What is the minimum number of white cubes visible on the surface?`,
+      ...makeMC(9, [0, 10, 1]),
+      exp: `A 3×3×3 cube has 27 small cubes: 1 hidden centre + 26 on the surface. Only 1 white cube can hide inside, so at least 10−1 = 9 white cubes must appear on the surface.` }; },
+  // Real Kangaroo: Grandmother's candies — division with remainder, minimize total
+  () => { const perBag = pick([15,18,20,24]); const leftover = rand(5,perBag-1);
+    const minKids = leftover + 1; const total = minKids * perBag + leftover;
+    return { q: `A grandmother divides candies equally into bags for her grandchildren, putting the largest possible number in each bag. She puts ${perBag} in each bag with ${leftover} left over. What is the smallest total number of candies she could have?`,
+      ...makeMC(total, [total+perBag, total-leftover, total+1]),
+      exp: `Number of grandchildren > ${leftover}, so minimum is ${leftover+1}. Total = ${leftover+1}×${perBag} + ${leftover} = ${total}.` }; },
+  // Real Kangaroo: Cutting rope at two different intervals (inclusion-exclusion)
+  () => { const a = pick([8,10,12]); const b = pick([12,15,16]);
+    const g = gcd(a,b); const marksA = a-1; const marksB = b-1;
+    const common = (a*b/g) - 1; // common inner marks... actually let me think more carefully
+    // marks for A: at positions 1/a, 2/a,...,(a-1)/a — that's a-1 marks
+    // marks for B: at positions 1/b, 2/b,...,(b-1)/b — that's b-1 marks
+    // common marks: positions that are multiples of 1/lcm(a,b) ... actually shared = gcd-1
+    const shared = g - 1;
+    const totalMarks = marksA + marksB - shared;
+    const pieces = totalMarks + 1;
+    return { q: `Hassan marks a rope to cut it into ${a} equal pieces. Muhammad marks the same rope to cut it into ${b} equal pieces. Mayar then cuts at all marked points. How many pieces does she get?`,
+      ...makeMC(pieces, [a+b, marksA+marksB+1, pieces+1]),
+      exp: `Hassan makes ${marksA} marks, Muhammad makes ${marksB} marks. They share ${shared} common points. Total marks = ${marksA}+${marksB}−${shared} = ${totalMarks}. Pieces = ${totalMarks}+1 = ${pieces}.` }; },
+  // Real Kangaroo: Cups on saucers — derangement logic ("exactly 3 match is impossible")
+  () => { const n = pick([4,5,6]);
+    return { q: `${n} cups are randomly placed on ${n} matching saucers. Which statement is true?`,
+      options: shuffle([
+        `Exactly ${n-1} cups on matching saucers is impossible`,
+        `Exactly ${n-1} cups on matching saucers is possible`,
+        `All ${n} matching is impossible`,
+        `None matching is impossible`
+      ]),
+      answer: `Exactly ${n-1} cups on matching saucers is impossible`,
+      exp: `If ${n-1} cups match their saucer, the last one must also match (there's only one left). So exactly ${n-1} matching is impossible.` }; },
+  // Real Kangaroo: 3-digit number + appended digit = increase by K
+  () => { const k = pick([2024,1036,3048]);
+    let abc=-1, d=-1;
+    for (let dd=0;dd<=9;dd++) { if ((k-dd)%9===0) { const test = (k-dd)/9; if(test>=100&&test<=999){ abc=test; d=dd; break; } } }
+    if (abc<0) return g6_hard[0]();
+    return { q: `Yara writes a three-digit number on the board. Bandar writes a fourth digit to the right of it and says "The number increased by ${k}!" What digit did Bandar write?`,
+      ...makeMC(d, [d+1>9?d-1:d+1, Math.floor(k/100), d+2>9?d-2:d+2]),
+      exp: `Let the 3-digit number be N. Then 10N+d − N = ${k}, so 9N+d = ${k}. Try d: when d=${d}, N = ${(k-d)/9}. Check: ${abc}${d} − ${abc} = ${k}. ✓` }; },
+  // Kangaroo: weighing problem — find fake coin with balance
+  () => { const n = pick([9,12,27]); const weighings = n===9?2:n===12?3:3;
+    return { q: `You have ${n} identical-looking coins. One is heavier. Using a balance scale, what is the minimum number of weighings needed to find the heavy coin?`,
+      ...makeMC(weighings, [weighings+1, n, Math.ceil(Math.log2(n))]),
+      exp: `Split into 3 groups each time. ${n} coins needs ${weighings} weighings (divide by 3 each step).` }; },
+  // Kangaroo: digital root / repeated digit sum
+  () => { const n = rand(100,999); let dr = n; while(dr>=10){ dr = String(dr).split('').reduce((a,b)=>a+parseInt(b),0); }
+    return { q: `Find the digital root of ${n} (keep summing digits until you get a single digit).`,
+      ...makeMC(dr, [dr+1>9?dr-2:dr+1, n%10, Math.floor(n/100)]),
+      exp: `${n} → ${String(n).split('').join('+')} → keep summing → digital root = ${dr}.` }; },
+  // Kangaroo: speed-distance-time with a twist
+  () => { const d=rand(30,60); const s1=rand(10,20); const s2=rand(20,40);
+    if(s1===s2) return g6_hard[0]();
+    const t1 = d/s1; const t2 = d/s2; const avgSpeed = +(2*d/(t1+t2)).toFixed(1);
+    return { q: `A car travels ${d} km at ${s1} km/h and returns at ${s2} km/h. What is the average speed for the whole trip?`,
+      ...makeMC(`${avgSpeed} km/h`, [`${(s1+s2)/2} km/h`, `${avgSpeed+2} km/h`, `${Math.round(d/(t1+t2))} km/h`]),
+      exp: `Total distance = ${2*d} km. Total time = ${d}/${s1}+${d}/${s2} = ${t1.toFixed(2)}+${t2.toFixed(2)} h. Avg = ${2*d}/(${(t1+t2).toFixed(2)}) ≈ ${avgSpeed} km/h. Note: it's NOT (${s1}+${s2})/2!` }; },
+  // Kangaroo: pigeonhole principle
+  () => { const socks = rand(3,5); const colors = ['red','blue','green','yellow','black'].slice(0,socks);
+    const guarantee = socks+1;
+    return { q: `A drawer has socks in ${socks} colors: ${colors.join(', ')}. In the dark, what is the minimum number you must take out to guarantee a matching pair?`,
+      ...makeMC(guarantee, [socks, 2, guarantee+1]),
+      exp: `By the pigeonhole principle: ${socks} colors means ${socks}+1 = ${guarantee} socks guarantees a match.` }; },
+  // Kangaroo: geometric series / paper folding thickness
+  () => { const folds = rand(5,10); const layers = Math.pow(2,folds);
+    return { q: `A sheet of paper is folded in half ${folds} times. How many layers thick is it?`,
+      ...makeMC(layers, [2*folds, layers/2, layers+1]),
+      exp: `Each fold doubles the layers. After ${folds} folds: 2^${folds} = ${layers} layers.` }; },
+  // Kangaroo: chessboard coloring — dominoes covering
+  () => { const removed = pick(['two opposite corners','two same-colour corners']);
+    const canTile = removed === 'two same-colour corners' ? 'No' : 'Yes';
+    return { q: `An 8×8 chessboard has ${removed} removed. Can the remaining 62 squares be covered exactly by 31 dominoes (each covering 2 squares)?`,
+      options: shuffle(['Yes','No','Only with rotated dominoes','Need 32 dominoes']),
+      answer: canTile,
+      exp: removed==='two opposite corners' ? `Opposite corners are different colours, so 31 white and 31 black remain — domino tiling works.` : `Same-colour corners means 32 of one colour and 30 of the other — each domino covers one of each, so it's impossible.` }; },
+  // Kangaroo: working backwards from result
+  () => { const target = rand(5,15); const ops = pick([['+3','×2','-5'], ['×2','+4','÷2'], ['+5','×3','-7']]);
+    // work forward from target
+    let val = target;
+    const undoOps = ops.map(op => {
+      if(op.startsWith('+')) return `-${op.slice(1)}`;
+      if(op.startsWith('-')) return `+${op.slice(1)}`;
+      if(op.startsWith('×')) return `÷${op.slice(1)}`;
+      if(op.startsWith('÷')) return `×${op.slice(1)}`;
+    }).reverse();
+    // Actually compute forward
+    let v = target;
+    for(const op of ops) {
+      if(op.startsWith('+')) v += parseInt(op.slice(1));
+      else if(op.startsWith('-')) v -= parseInt(op.slice(1));
+      else if(op.startsWith('×')) v *= parseInt(op.slice(1));
+      else if(op.startsWith('÷')) v /= parseInt(op.slice(1));
+    }
+    if(!Number.isInteger(v)||v<0) return g6_hard[0]();
+    return { q: `I think of a number. I ${ops.join(', then ')}. I get ${v}. What was my number?`,
+      ...makeMC(target, [target+1, v, target-1]),
+      exp: `Work backwards from ${v}: undo each operation in reverse to get ${target}.` }; },
+  // Kangaroo: count squares in a figure (not just unit squares)
+  () => { const n = rand(3,5); let total = 0;
+    for(let s=1;s<=n;s++) total += (n-s+1)*(n-s+1);
+    return { q: `A ${n}×${n} grid is drawn. How many squares of ALL sizes (1×1, 2×2, …, ${n}×${n}) can be found?`,
+      ...makeMC(total, [n*n, total+1, n*(n+1)]),
+      exp: `1×1: ${n*n}, 2×2: ${(n-1)*(n-1)}, … ${n}×${n}: 1. Total = ${total}.` }; },
+  // Kangaroo: gear wheels — direction and speed
+  () => { const gears = rand(3,6); const dir = gears%2===1 ? 'same' : 'opposite';
+    return { q: `${gears} gears are connected in a chain. If the first gear turns clockwise, which direction does the last gear turn?`,
+      options: shuffle(['Clockwise','Counterclockwise','It depends on gear sizes','It stays still']),
+      answer: dir==='same' ? 'Clockwise' : 'Counterclockwise',
+      exp: `Each gear reverses direction. With ${gears} gears (${gears-1} reversals), the last turns ${dir==='same'?'clockwise (same)':'counterclockwise (opposite)'}.` }; },
+  // Kangaroo: sum of interior angles of polygon
+  () => { const n = pick([5,6,7,8]); const sum = (n-2)*180;
+    return { q: `What is the sum of interior angles of a regular ${n}-sided polygon?`,
+      ...makeMC(`${sum}°`, [`${n*180}°`, `${sum+180}°`, `${360}°`]),
+      exp: `Sum = (n−2)×180° = (${n}−2)×180° = ${sum}°.` }; },
+];
+
+function gcd(a,b){ return b===0?a:gcd(b,a%b); }
+
+// ============ STORY VARIANT GENERATORS ============
+// Same math, different stories — drastically reduces perceived repetition
+
+// --- G4 EASY VARIANTS ---
+// Elevator up/down variant of kangaroo jumps
+g4_easy.push(
+  () => { const up=rand(3,6), down=rand(1,3), trips=rand(3,5); const net=(up-down)*trips;
+    return { q: `An elevator goes up ${up} floors, then down ${down} floor${down>1?'s':''}. It does this ${trips} times starting from the ground floor. What floor is it on?`,
+      ...makeMC(net, [up*trips, net+1, up-down]),
+      exp: `Each trip: +${up}−${down} = ${up-down} floors. After ${trips} trips: ${up-down}×${trips} = ${net}.` }; },
+  () => { const bikes=rand(3,6), trikes=rand(2,4); const wheels=bikes*2+trikes*3;
+    return { q: `A shop has ${bikes} bicycles and ${trikes} tricycles. How many wheels are there in total?`,
+      ...makeMC(wheels, [bikes*3+trikes*2, (bikes+trikes)*2, wheels+1]),
+      exp: `Bicycles: ${bikes}×2 = ${bikes*2}. Tricycles: ${trikes}×3 = ${trikes*3}. Total = ${wheels}.` }; },
+  () => { const boxes=rand(3,6), per=rand(4,8); const total=boxes*per; const eaten=rand(1,per);
+    return { q: `Mom buys ${boxes} boxes of cookies with ${per} cookies each. The family eats ${eaten} cookies. How many are left?`,
+      ...makeMC(total-eaten, [total, total-eaten+1, boxes*eaten]),
+      exp: `Total = ${boxes}×${per} = ${total}. Left = ${total}−${eaten} = ${total-eaten}.` }; },
+  () => { const friends=rand(3,6); const stickers=friends*rand(3,8); const each=stickers/friends;
+    if(!Number.isInteger(each)) return g4_easy[0]();
+    return { q: `${stickers} stickers are shared equally among ${friends} friends. How many does each friend get?`,
+      ...makeMC(each, [stickers-friends, each+1, friends]),
+      exp: `${stickers} ÷ ${friends} = ${each} stickers each.` }; },
+  () => { const coins = [rand(1,5), rand(1,5), rand(1,5)]; const total = coins.reduce((a,b)=>a+b,0);
+    return { q: `Ahmed finds ${coins[0]} coins on Monday, ${coins[1]} on Tuesday, and ${coins[2]} on Wednesday. How many coins did he find altogether?`,
+      ...makeMC(total, [total+1, coins[0]*3, total-1]),
+      exp: `${coins.join(' + ')} = ${total} coins.` }; },
+  () => { const total=rand(15,30); const red=rand(3,total-5); const blue=total-red;
+    return { q: `A jar has ${total} marbles. ${red} are red and the rest are blue. How many blue marbles are there?`,
+      ...makeMC(blue, [red, total, blue+1]),
+      exp: `Blue = ${total} − ${red} = ${blue}.` }; },
+  () => { const side=rand(3,8); const area=side*side;
+    return { q: `A square garden has sides of ${side} metres. What is its area?`,
+      ...makeMC(`${area} m²`, [`${4*side} m²`, `${2*side} m²`, `${area+1} m²`]),
+      exp: `Area = side² = ${side}² = ${area} m².` }; },
+  () => { const cm=pick([100,150,200,250,300]); const m=cm/100;
+    return { q: `How many metres is ${cm} centimetres?`,
+      ...makeMC(m, [cm, m*10, m+1]),
+      exp: `${cm} cm ÷ 100 = ${m} m.` }; },
+  () => { const apples=rand(3,8), cost=rand(2,5); const total=apples*cost; const paid=Math.ceil(total/10)*10;
+    return { q: `${apples} apples cost ${cost} zeds each. What is the total cost?`,
+      ...makeMC(total, [apples+cost, total+cost, paid]),
+      exp: `${apples} × ${cost} = ${total} zeds.` }; }
+);
+
+// --- G4 MEDIUM VARIANTS ---
+g4_medium.push(
+  () => { const target=rand(15,30); const bags=rand(3,5); const each=Math.floor(target/bags); const left=target-each*bags;
+    return { q: `${target} apples are packed into ${bags} bags as equally as possible. How many apples are left over?`,
+      ...makeMC(left, [each, bags, left+1]),
+      exp: `${target} ÷ ${bags} = ${each} remainder ${left}.` }; },
+  () => { const n=rand(5,8); const sum=n*(n+1)/2;
+    return { q: `What is the sum of all whole numbers from 1 to ${n}?`,
+      ...makeMC(sum, [n*n, n*(n+1), sum+1]),
+      exp: `Use the formula: n(n+1)/2 = ${n}×${n+1}/2 = ${sum}.` }; },
+  () => { const speed=rand(40,80), time=rand(2,4); const dist=speed*time;
+    return { q: `A car travels at ${speed} km/h for ${time} hours. How far does it go?`,
+      ...makeMC(`${dist} km`, [`${speed+time} km`, `${speed} km`, `${dist+speed} km`]),
+      exp: `Distance = speed × time = ${speed} × ${time} = ${dist} km.` }; },
+  () => { const base=rand(4,8), height=rand(3,7); const area=base*height/2;
+    if(!Number.isInteger(area)) return g4_medium[0]();
+    return { q: `A triangle has a base of ${base} cm and height of ${height} cm. What is its area?`,
+      ...makeMC(`${area} cm²`, [`${base*height} cm²`, `${base+height} cm²`, `${area+1} cm²`]),
+      exp: `Area = ½ × ${base} × ${height} = ${area} cm².` }; },
+  () => { const people=rand(6,12); const pizzas=rand(2,4); const slicesPerPizza=8;
+    const total=pizzas*slicesPerPizza; const each=Math.floor(total/people); const left=total-each*people;
+    return { q: `${people} friends share ${pizzas} pizzas, each cut into ${slicesPerPizza} slices. If everyone gets an equal number of slices, how many slices are left over?`,
+      ...makeMC(left, [each, total, left+1]),
+      exp: `Total slices = ${pizzas}×${slicesPerPizza} = ${total}. ${total} ÷ ${people} = ${each} R ${left}.` }; },
+  () => { const l=rand(6,12), w=rand(3,l-1); const fence=2*(l+w);
+    return { q: `A rectangular garden is ${l} m long and ${w} m wide. How many metres of fencing are needed to go all the way around?`,
+      ...makeMC(fence, [l*w, l+w, fence+2]),
+      exp: `Perimeter = 2(${l}+${w}) = 2×${l+w} = ${fence} m.` }; },
+  () => { const pattern = pick([[2,4,6,8,10],[1,3,5,7,9],[3,6,9,12,15],[5,10,15,20,25]]);
+    const next = pattern[4]+(pattern[1]-pattern[0]);
+    return { q: `What comes next in the pattern: ${pattern.join(', ')}, …?`,
+      ...makeMC(next, [next+1, pattern[4], next-1]),
+      exp: `Each number increases by ${pattern[1]-pattern[0]}. Next = ${pattern[4]}+${pattern[1]-pattern[0]} = ${next}.` }; },
+  () => { const rows=rand(4,6), cols=rand(4,6), coloured=rand(3,rows*cols-3);
+    return { q: `A ${rows}×${cols} grid has ${coloured} cells coloured. How many cells are NOT coloured?`,
+      ...makeMC(rows*cols-coloured, [coloured, rows*cols, rows*cols-coloured+1]),
+      exp: `Total = ${rows}×${cols} = ${rows*cols}. Uncoloured = ${rows*cols}−${coloured} = ${rows*cols-coloured}.` }; },
+  () => { const n = rand(100,300); const d = pick([2,3,5,9]);
+    const remainder = n % d;
+    return { q: `What is the remainder when ${n} is divided by ${d}?`,
+      ...makeMC(remainder, [d, Math.floor(n/d), remainder+1>d-1?0:remainder+1]),
+      exp: `${n} ÷ ${d} = ${Math.floor(n/d)} remainder ${remainder}.` }; },
+  () => { const orig = rand(20,50); const increase = rand(5,15); const pct = Math.round(100*increase/orig);
+    return { q: `A plant grows from ${orig} cm to ${orig+increase} cm. What is the percentage increase?`,
+      ...makeMC(`${pct}%`, [`${increase}%`, `${Math.round(100*increase/(orig+increase))}%`, `${pct+5}%`]),
+      exp: `Increase = ${increase}. Percentage = ${increase}/${orig}×100 ≈ ${pct}%.` }; }
+);
+
+// --- G4 HARD VARIANTS ---
+g4_hard.push(
+  () => { const cats=rand(2,5), dogs=rand(2,5), birds=rand(1,4);
+    const totalLegs = cats*4+dogs*4+birds*2;
+    const totalAnimals = cats+dogs+birds;
+    return { q: `A vet sees ${totalAnimals} animals (cats, dogs, birds) and counts ${totalLegs} legs. There are ${cats} cats. How many birds are there?`,
+      ...makeMC(birds, [dogs, cats, birds+1]),
+      exp: `Cats: ${cats}×4 = ${cats*4} legs. Remaining: ${totalAnimals-cats} animals, ${totalLegs-cats*4} legs. Dogs have 4 legs, birds 2. Solving: ${birds} birds.` }; },
+  () => { const a=rand(10,50), b=rand(10,50); const s=a+b, d=Math.abs(a-b);
+    return { q: `Two numbers add up to ${s} and their difference is ${d}. What is the larger number?`,
+      ...makeMC(Math.max(a,b), [s, Math.min(a,b), Math.max(a,b)+1]),
+      exp: `Larger = (sum+difference)/2 = (${s}+${d})/2 = ${Math.max(a,b)}.` }; },
+  () => { const speed1=rand(3,6), speed2=rand(3,6);
+    if(speed1===speed2) return g4_hard[0]();
+    const lcmTime = (speed1*speed2)/gcd(speed1,speed2);
+    return { q: `Bus A comes every ${speed1} minutes and Bus B every ${speed2} minutes. They both leave at 8:00 AM. When is the next time they leave together?`,
+      ...makeMC(`8:${String(lcmTime).padStart(2,'0')} AM`, [`8:${String(speed1+speed2).padStart(2,'0')} AM`, `8:${String(lcmTime+speed1).padStart(2,'0')} AM`, `8:${String(Math.min(speed1,speed2)).padStart(2,'0')} AM`]),
+      exp: `LCM(${speed1},${speed2}) = ${lcmTime}. They meet again at 8:${String(lcmTime).padStart(2,'0')} AM.` }; },
+  () => { const items = [rand(2,8),rand(2,8),rand(2,8),rand(2,8),rand(2,8)];
+    const sorted = [...items].sort((a,b)=>a-b);
+    const median = sorted[2];
+    return { q: `Find the median of these numbers: ${items.join(', ')}.`,
+      ...makeMC(median, [Math.round(items.reduce((a,b)=>a+b,0)/5), median+1, sorted[1]]),
+      exp: `Sort: ${sorted.join(', ')}. The middle (3rd) value is ${median}.` }; },
+  () => { const total=rand(20,40); const dogs=rand(5,total-5); const cats=total-dogs;
+    const moreOrFewer = dogs>cats ? 'more dogs than cats' : 'more cats than dogs';
+    const diff = Math.abs(dogs-cats);
+    return { q: `A pet store has ${total} animals: some dogs and some cats. There are ${diff} ${moreOrFewer}. How many dogs are there?`,
+      ...makeMC(dogs, [cats, total, dogs+1]),
+      exp: `Let d = dogs, c = cats. d+c = ${total}, d−c = ${dogs>cats?'':'-'}${diff}. Solving: d = ${dogs}.` }; },
+  () => { const sides=[rand(3,8),rand(3,8),rand(3,8)];
+    const canForm = sides[0]+sides[1]>sides[2] && sides[0]+sides[2]>sides[1] && sides[1]+sides[2]>sides[0];
+    return { q: `Can a triangle be formed with sides ${sides[0]} cm, ${sides[1]} cm, and ${sides[2]} cm?`,
+      options: shuffle(['Yes','No','Only if it is a right triangle','Need more information']),
+      answer: canForm ? 'Yes' : 'No',
+      exp: `Triangle inequality: each side must be less than the sum of the other two. ${canForm?'All conditions met — yes.':'Fails — no.'}` }; }
+);
+
+// --- G6 EASY VARIANTS ---
+g6_easy.push(
+  () => { const a=rand(2,9), b=rand(2,9); const prod=a*b; const sum=a+b;
+    return { q: `Two numbers multiply to give ${prod} and add to give ${sum}. What are the two numbers?`,
+      ...makeMC(`${Math.min(a,b)} and ${Math.max(a,b)}`, [`${prod} and ${sum}`, `${a+1} and ${b-1}`, `1 and ${prod}`]),
+      exp: `${a} × ${b} = ${prod} and ${a} + ${b} = ${sum}.` }; },
+  () => { const km=pick([1.5,2.5,3,4.5,5]); const m=km*1000;
+    return { q: `Convert ${km} kilometres to metres.`,
+      ...makeMC(`${m} m`, [`${km*100} m`, `${m+100} m`, `${km} m`]),
+      exp: `${km} km × 1000 = ${m} m.` }; },
+  () => { const a=rand(10,30), b=rand(10,30); const ans=Math.abs(a-b);
+    return { q: `What is the absolute difference between ${a} and ${b}?`,
+      ...makeMC(ans, [a+b, Math.max(a,b), ans+1]),
+      exp: `|${a}−${b}| = ${ans}.` }; },
+  () => { const base=rand(2,5), exp_=rand(2,4); const val=Math.pow(base,exp_);
+    return { q: `Evaluate ${base}^${exp_}.`,
+      ...makeMC(val, [base*exp_, val+1, base+exp_]),
+      exp: `${base}^${exp_} = ${Array(exp_).fill(base).join('×')} = ${val}.` }; },
+  () => { const a=rand(1,5), b=rand(1,5), c=rand(1,5); const perim=a+b+c;
+    if(a+b<=c||a+c<=b||b+c<=a) return g6_easy[0]();
+    return { q: `A triangle has sides ${a} cm, ${b} cm, and ${c} cm. What is its perimeter?`,
+      ...makeMC(`${perim} cm`, [`${a*b} cm`, `${perim+1} cm`, `${Math.max(a,b,c)} cm`]),
+      exp: `Perimeter = ${a}+${b}+${c} = ${perim} cm.` }; },
+  () => { const n=rand(10,50); const even=Math.floor(n/2);
+    return { q: `How many even numbers are there from 1 to ${n}?`,
+      ...makeMC(even, [n, even+1, Math.ceil(n/2)+1]),
+      exp: `Even numbers: 2, 4, 6, …, ${n%2===0?n:n-1}. Count = ${even}.` }; }
+);
+
+// --- G6 MEDIUM VARIANTS ---
+g6_medium.push(
+  () => { const l=rand(4,8), w=rand(3,l); const tileSize=gcd(l,w);
+    const tiles=(l*w)/(tileSize*tileSize);
+    return { q: `A ${l}×${w} rectangular floor is tiled with the largest possible square tiles. How many tiles are needed?`,
+      ...makeMC(tiles, [l*w, tiles+1, l+w]),
+      exp: `Largest tile side = GCD(${l},${w}) = ${tileSize}. Tiles = (${l}×${w})/(${tileSize}²) = ${l*w}/${tileSize*tileSize} = ${tiles}.` }; },
+  () => { const items=rand(5,8); const combos=items*(items-1)/2;
+    return { q: `A restaurant offers ${items} ice cream flavours. How many different 2-flavour combinations can you make?`,
+      ...makeMC(combos, [items*2, items*(items-1), combos+1]),
+      exp: `C(${items},2) = ${items}×${items-1}/2 = ${combos}.` }; },
+  () => { const invest=rand(100,500); const rate=pick([5,8,10]); const years=rand(2,4);
+    const interest=invest*rate*years/100;
+    return { q: `${invest} zeds is invested at ${rate}% simple interest per year for ${years} years. How much interest is earned?`,
+      ...makeMC(`${interest} zeds`, [`${invest+interest} zeds`, `${invest*rate/100} zeds`, `${interest+invest} zeds`]),
+      exp: `Interest = ${invest}×${rate}/100×${years} = ${interest} zeds.` }; },
+  () => { const a=rand(2,6), b=rand(2,6); const hcf=gcd(a*5,b*5);
+    return { q: `What is the highest common factor (HCF) of ${a*5} and ${b*5}?`,
+      ...makeMC(hcf, [a*5*b*5, Math.min(a*5,b*5), hcf+5]),
+      exp: `HCF(${a*5},${b*5}) = ${hcf}.` }; },
+  () => { const time1=rand(10,20), time2=rand(10,20);
+    if(time1===time2) return g6_medium[0]();
+    const total=time1+time2;
+    return { q: `Leila runs the first half of a race in ${time1} minutes and the second half in ${time2} minutes. What is her total time?`,
+      ...makeMC(`${total} min`, [`${Math.abs(time1-time2)} min`, `${total+5} min`, `${time1*time2} min`]),
+      exp: `Total = ${time1}+${time2} = ${total} minutes.` }; }
+);
+
+// --- G6 HARD VARIANTS ---
+g6_hard.push(
+  () => { const n=rand(4,7); const diag=n*(n-3)/2;
+    return { q: `How many diagonals can be drawn inside a polygon with ${n} sides?`,
+      ...makeMC(diag, [n*(n-1)/2, n, diag+1]),
+      exp: `Diagonals = n(n−3)/2 = ${n}(${n}−3)/2 = ${diag}.` }; },
+  () => { const a=rand(2,5), b=rand(2,5); const am=(a+b)/2; const gm=Math.sqrt(a*b);
+    const amVal = +am.toFixed(1); const gmVal = +gm.toFixed(2);
+    return { q: `For the numbers ${a} and ${b}: which is larger, the arithmetic mean or the geometric mean?`,
+      options: shuffle(['Arithmetic mean','Geometric mean','They are equal','Cannot tell']),
+      answer: a===b?'They are equal':'Arithmetic mean',
+      exp: `AM = (${a}+${b})/2 = ${amVal}. GM = √(${a}×${b}) ≈ ${gmVal}. ${a===b?'Equal when a=b.':'AM ≥ GM always (AM-GM inequality).'}` }; },
+  () => { const a=rand(1,4), b=rand(1,4), c=rand(1,4);
+    const det = a*b-c*c;
+    return { q: `If a + b = ${a+b} and a × b = ${a*b}, what is a² + b²?`,
+      ...makeMC(a*a+b*b, [(a+b)*(a+b), a*b*2, a*a+b*b+1]),
+      exp: `a²+b² = (a+b)²−2ab = ${(a+b)*(a+b)}−${2*a*b} = ${a*a+b*b}.` }; },
+  () => { const n=pick([100,200,500,1000]); let sumDigits=0;
+    for(let i=1;i<=n;i++) { let x=i; while(x>0){sumDigits+=x%10;x=Math.floor(x/10);} }
+    return { q: `What is the sum of all the digits of all numbers from 1 to ${n}?`,
+      ...makeMC(sumDigits, [n*(n+1)/2, sumDigits+10, sumDigits-5]),
+      exp: `Add each digit of every number from 1 to ${n}. The total is ${sumDigits}.` }; },
+  () => { const rect_l=rand(6,12), rect_w=rand(4,8);
+    const circleR = Math.min(rect_l,rect_w)/2;
+    const wastedArea = +(rect_l*rect_w - Math.PI*circleR*circleR).toFixed(1);
+    return { q: `The largest possible circle is cut from a ${rect_l}×${rect_w} cm rectangle. What area of the rectangle is wasted? (Use π ≈ 3.14)`,
+      ...makeMC(`≈ ${wastedArea} cm²`, [`${rect_l*rect_w} cm²`, `≈ ${+(Math.PI*circleR*circleR).toFixed(1)} cm²`, `≈ ${+(wastedArea+5).toFixed(1)} cm²`]),
+      exp: `Circle radius = ${circleR} cm. Wasted = ${rect_l}×${rect_w} − π×${circleR}² ≈ ${rect_l*rect_w} − ${+(Math.PI*circleR*circleR).toFixed(1)} ≈ ${wastedArea} cm².` }; }
+);
+
+// ============ SVG HELPERS ============
+function svg(w, h, inner) { return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">${inner}</svg>`; }
+function rect(x,y,w,h,fill='#fff',stroke='#333',sw=1) { return `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}" rx="1"/>`; }
+function txt(x,y,t,sz=12,anchor='middle',fill='#333') { return `<text x="${x}" y="${y}" font-size="${sz}" text-anchor="${anchor}" fill="${fill}" font-family="sans-serif">${t}</text>`; }
+function circle_(cx,cy,r,fill='#667eea',stroke='#333',sw=1) { return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`; }
+function line_(x1,y1,x2,y2,stroke='#333',sw=2) { return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${stroke}" stroke-width="${sw}"/>`; }
+
+// ============ VISUAL (FIGURE) QUESTION GENERATORS ============
+
+// --- GRADE 4 VISUAL ---
+// Grid coloring figure: show a grid with painted rows/column
+const g4_fig = [
+  // Figure: Grid with colored rows and column — count white cells
+  () => { const rows = rand(4,6), cols = rand(4,6); const pR = rand(1,2); const total = rows*cols;
+    const painted = pR*cols + rows - pR; const white = total - painted;
+    const cs = 30; const w = cols*cs+2; const h = rows*cs+2;
+    let s = '';
+    for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) {
+      const isRed = r < pR || c === 0;
+      s += rect(1+c*cs, 1+r*cs, cs, cs, isRed?'#e57373':'#fff');
+    }
+    const fig = svg(w, h, s);
+    return { q: `In the grid below, the red cells are painted. How many white cells remain?`,
+      fig, ...makeMC(white, [total-pR*cols, white+1, white-1]),
+      exp: `Painted = ${pR} row(s) × ${cols} + 1 column × ${rows} − ${pR} overlap = ${painted}. White = ${total} − ${painted} = ${white}.` }; },
+
+  // Figure: Number pattern on a number line with kangaroo jumps
+  () => { const start=0, big=rand(3,5), small=rand(1,2), reps=rand(3,5);
+    const positions = [start]; let pos = start;
+    for (let i=0;i<reps;i++){ pos+=big; positions.push(pos); pos-=small; positions.push(pos); }
+    const final = pos; const w = Math.max(final+2,16)*20+40; const h = 60;
+    let s = line_(20, 40, w-20, 40, '#999', 1);
+    for (let i=0;i<=final+1;i++) s += line_(20+i*20, 36, 20+i*20, 44, '#999', 1) + txt(20+i*20, 55, i, 9);
+    // mark kangaroo positions
+    positions.forEach((p,i) => { if(i>0) s += circle_(20+p*20, 28, 4, i%2===1?'#4caf50':'#e53935'); });
+    s += circle_(20, 28, 5, '#667eea'); // start
+    const fig = svg(w, h, s);
+    return { q: `A kangaroo starts at 0 on the number line. It jumps +${big} then −${small}, repeating this ${reps} times. Where does it land?`,
+      fig, ...makeMC(final, [big*reps, final+small, final-1]),
+      exp: `Each round: +${big}−${small} = +${big-small}. After ${reps} rounds: ${reps}×${big-small} = ${final}.` }; },
+
+  // Figure: Shape made of unit squares — count squares
+  () => { const shape = pick([
+      {name:'L-shape', cells:[[0,0],[0,1],[0,2],[1,2]], count:4},
+      {name:'T-shape', cells:[[0,0],[1,0],[2,0],[1,1]], count:4},
+      {name:'Z-shape', cells:[[0,0],[1,0],[1,1],[2,1]], count:4},
+      {name:'plus-shape', cells:[[1,0],[0,1],[1,1],[2,1],[1,2]], count:5},
+      {name:'U-shape', cells:[[0,0],[0,1],[0,2],[1,0],[1,2]], count:5},
+    ]);
+    const cs = 32; const maxR = Math.max(...shape.cells.map(c=>c[1]))+1;
+    const maxC = Math.max(...shape.cells.map(c=>c[0]))+1;
+    let s = '';
+    shape.cells.forEach(([c,r]) => { s += rect(4+c*cs, 4+r*cs, cs, cs, '#b3e5fc', '#0288d1', 2); });
+    const fig = svg(maxC*cs+8, maxR*cs+8, s);
+    return { q: `The figure below is made of unit squares. How many unit squares does it contain?`,
+      fig, ...makeMC(shape.count, [shape.count+1, shape.count-1, shape.count+2]),
+      exp: `Count the squares: ${shape.count}.` }; },
+
+  // Figure: Pattern sequence — colored blocks repeating
+  () => { const colors = shuffle(['#e53935','#1e88e5','#43a047','#fdd835']).slice(0,3);
+    const names = {'#e53935':'Red','#1e88e5':'Blue','#43a047':'Green','#fdd835':'Yellow'};
+    const period = colors.length; const total = rand(3,5)*period + rand(1,period);
+    const targetIdx = total; // what color is the (total+1)th block?
+    const ansColor = colors[targetIdx % period];
+    const cs = 24; const showN = Math.min(total, 12);
+    let s = '';
+    for (let i=0;i<showN;i++) {
+      s += rect(4+i*(cs+2), 4, cs, cs, colors[i%period], '#333', 1);
+      s += txt(4+i*(cs+2)+cs/2, cs+18, i+1, 8);
+    }
+    if (showN < total) s += txt(4+showN*(cs+2)+10, cs/2+4, '…', 16, 'start');
+    s += rect(4+(showN+(showN<total?1:0))*(cs+2), 4, cs, cs, '#eee', '#333', 2);
+    s += txt(4+(showN+(showN<total?1:0))*(cs+2)+cs/2, cs/2+8, '?', 14);
+    const fig = svg(4+(showN+2)*(cs+2)+cs+8, cs+24, s);
+    return { q: `Blocks repeat in a pattern: ${colors.map(c=>names[c]).join(', ')}. What colour is block number ${total+1}?`,
+      fig, options: shuffle([names[ansColor], ...colors.filter(c=>c!==ansColor).map(c=>names[c]), 'None of these']).slice(0,4),
+      answer: names[ansColor],
+      exp: `Pattern repeats every ${period}. Block ${total+1}: (${total+1}−1) mod ${period} = ${targetIdx%period} → ${names[ansColor]}.` }; },
+
+  // Figure: Dice faces — show a die face, ask for opposite
+  () => { const top = rand(1,6); const bottom = 7 - top;
+    const dotPositions = {
+      1:[[20,20]], 2:[[10,10],[30,30]], 3:[[10,10],[20,20],[30,30]],
+      4:[[10,10],[30,10],[10,30],[30,30]], 5:[[10,10],[30,10],[20,20],[10,30],[30,30]],
+      6:[[10,10],[30,10],[10,20],[30,20],[10,30],[30,30]]
+    };
+    let s = rect(2,2,36,36,'#fff','#333',2);
+    dotPositions[top].forEach(([x,y]) => { s += circle_(x+2, y+2, 4, '#333', 'none', 0); });
+    const fig = svg(40, 40, s);
+    return { q: `The die shows this face on top. On a standard die, opposite faces sum to 7. What is the bottom face?`,
+      fig, ...makeMC(bottom, [top, 7, bottom+1>6?bottom-2:bottom+1]),
+      exp: `Top = ${top}, so bottom = 7 − ${top} = ${bottom}.` }; },
+];
+
+// --- GRADE 6 VISUAL ---
+const g6_fig = [
+  // Figure: Rectangle with dimensions — find area/perimeter
+  () => { const L = rand(5,10), W = rand(3,7); const area = L*W; const p = 2*(L+W);
+    const which = pick(['area','perimeter']); const ans = which==='area' ? area : p;
+    let s = rect(10,10,200,120,'#e3f2fd','#0288d1',2);
+    s += txt(110, 80, `${L} cm`, 14);
+    s += txt(220, 75, `${W} cm`, 12, 'start');
+    // arrows for dimensions
+    s += line_(10,140,210,140,'#333',1); s += line_(220,10,220,130,'#333',1);
+    const fig = svg(260, 150, s);
+    return { q: `What is the ${which} of the rectangle shown below?`,
+      fig, ...makeMC(which==='area'?`${ans} cm²`:`${ans} cm`, [which==='area'?`${p} cm²`:`${area} cm`, `${ans+1} ${which==='area'?'cm²':'cm'}`, `${ans-1} ${which==='area'?'cm²':'cm'}`]),
+      exp: which==='area' ? `Area = ${L} × ${W} = ${area} cm².` : `Perimeter = 2(${L}+${W}) = ${p} cm.` }; },
+
+  // Figure: Triangle with base and height — find area
+  () => { const base = rand(4,10), h = rand(3,8); const area = base*h/2;
+    let s = `<polygon points="10,${h*15+10} ${base*15+10},${h*15+10} ${Math.floor(base*15/2)+10},10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>`;
+    s += txt(Math.floor(base*15/2)+10, h*15+28, `${base} cm`, 12);
+    s += line_(Math.floor(base*15/2)+10, 10, Math.floor(base*15/2)+10, h*15+10, '#999', 1);
+    s += txt(Math.floor(base*15/2)+24, Math.floor(h*15/2)+10, `${h} cm`, 10, 'start');
+    const fig = svg(base*15+20, h*15+35, s);
+    return { q: `What is the area of the triangle shown?`,
+      fig, ...makeMC(`${area} cm²`, [`${base*h} cm²`, `${base+h} cm²`, `${area+1} cm²`]),
+      exp: `Area = ½ × base × height = ½ × ${base} × ${h} = ${area} cm².` }; },
+
+  // Figure: Circle with radius — find area or circumference
+  () => { const r = rand(3,7); const which = pick(['area','circumference']);
+    const ans = which==='area' ? Math.round(Math.PI*r*r) : +(2*Math.PI*r).toFixed(1);
+    const R = 50; const cx = 65, cy = 65;
+    let s = circle_(cx, cy, R, '#f3e5f5', '#7b1fa2', 2);
+    s += line_(cx, cy, cx+R, cy, '#333', 1);
+    s += txt(cx+R/2, cy-6, `${r} cm`, 11);
+    s += circle_(cx, cy, 2, '#333');
+    const fig = svg(130, 130, s);
+    return { q: `What is the ${which} of the circle? (Use π ≈ 3.14)`,
+      fig, ...makeMC(which==='area'?`≈ ${ans} cm²`:`≈ ${ans} cm`,
+        [which==='area'?`≈ ${2*r*r} cm²`:`≈ ${+(Math.PI*r).toFixed(1)} cm`,
+         `≈ ${ans+1} ${which==='area'?'cm²':'cm'}`,
+         `≈ ${Math.abs(ans-2)} ${which==='area'?'cm²':'cm'}`]),
+      exp: which==='area' ? `Area = πr² ≈ 3.14×${r}² ≈ ${ans} cm².` : `Circumference = 2πr ≈ 2×3.14×${r} ≈ ${ans} cm.` }; },
+
+  // Figure: Bar chart — read values and compute
+  () => { const labels = shuffle(['Mon','Tue','Wed','Thu','Fri']).slice(0,4);
+    const vals = labels.map(()=>rand(2,10)); const total = vals.reduce((a,b)=>a+b,0);
+    const maxV = Math.max(...vals);
+    const bw = 40, gap = 15, h = 160, base = h-20, scale = (base-30)/maxV;
+    let s = line_(40, base, 40+labels.length*(bw+gap), base, '#333', 1); // x-axis
+    line_(40, 30, 40, base, '#333', 1); // y-axis
+    vals.forEach((v, i) => {
+      const x = 50+i*(bw+gap); const barH = v*scale;
+      s += rect(x, base-barH, bw, barH, '#667eea', '#4a3a8a', 1);
+      s += txt(x+bw/2, base+14, labels[i], 10);
+      s += txt(x+bw/2, base-barH-5, v, 10);
+    });
+    const fig = svg(50+labels.length*(bw+gap)+10, h, s);
+    return { q: `The bar chart shows daily sales. What is the total across all ${labels.length} days?`,
+      fig, ...makeMC(total, [total+1, total-vals[0], maxV*labels.length]),
+      exp: `${vals.join(' + ')} = ${total}.` }; },
+
+  // Figure: Overlapping squares — shaded area
+  () => { const s1 = rand(6,9); const overlap = rand(2,s1-2);
+    const totalShaded = s1*s1 + s1*s1 - overlap*overlap;
+    const sc = 15;
+    let s = rect(10, 10, s1*sc, s1*sc, '#bbdefb', '#1565c0', 2);
+    s += rect(10+(s1-overlap)*sc, 10+(s1-overlap)*sc, s1*sc, s1*sc, '#c8e6c9', '#2e7d32', 2);
+    s += rect(10+(s1-overlap)*sc, 10+(s1-overlap)*sc, overlap*sc, overlap*sc, '#fff9c4', '#f57f17', 2);
+    s += txt(10+s1*sc/2, s1*sc+28, `${s1}`, 11);
+    s += txt(10+(s1-overlap)*sc+s1*sc/2, (s1-overlap)*sc+s1*sc+28, `${s1}`, 11);
+    s += txt(10+(s1-overlap)*sc+overlap*sc/2, (s1-overlap)*sc+overlap*sc/2+14, `${overlap}`, 10);
+    const fig = svg(10+(s1-overlap)*sc+s1*sc+10, 10+(s1-overlap)*sc+s1*sc+35, s);
+    return { q: `Two squares of side ${s1} overlap in a small square of side ${overlap} (yellow). What is the total coloured area (blue + green, not double-counting)?`,
+      fig, ...makeMC(totalShaded, [2*s1*s1, totalShaded+overlap, s1*s1]),
+      exp: `Two squares = 2×${s1}² = ${2*s1*s1}. Overlap = ${overlap}² = ${overlap*overlap}. Total = ${2*s1*s1} − ${overlap*overlap} = ${totalShaded}.` }; },
+
+  // Figure: Grid pattern — missing square in pattern
+  () => { const gridN = 4; const cs = 30;
+    // Create a checkerboard-like pattern with one cell missing
+    const missingR = rand(0,gridN-1), missingC = rand(0,gridN-1);
+    const pattern = []; // which cells are colored
+    for (let r=0;r<gridN;r++) for (let c=0;c<gridN;c++) {
+      if ((r+c)%2===0) pattern.push([r,c]);
+    }
+    const totalColored = pattern.length;
+    const isMissing = pattern.some(([r,c])=>r===missingR&&c===missingC);
+    let s = '';
+    for (let r=0;r<gridN;r++) for (let c=0;c<gridN;c++) {
+      const colored = (r+c)%2===0;
+      const show = !(r===missingR && c===missingC);
+      s += rect(4+c*cs, 4+r*cs, cs, cs, show?(colored?'#90caf9':'#fff'):'#fff', '#333', 1);
+      if (r===missingR && c===missingC) s += txt(4+c*cs+cs/2, 4+r*cs+cs/2+4, '?', 14, 'middle', '#e53935');
+    }
+    const fig = svg(gridN*cs+8, gridN*cs+8, s);
+    const shouldBeColored = isMissing ? 'Blue' : 'White';
+    return { q: `In this checkerboard pattern, what colour should the "?" cell be?`,
+      fig, options: shuffle(['Blue','White','Red','Cannot tell']),
+      answer: shouldBeColored,
+      exp: `In a checkerboard, colour depends on row+column being even (blue) or odd (white). Cell (${missingR+1},${missingC+1}): ${(missingR+missingC)%2===0?'even→Blue':'odd→White'}.` }; },
+];
+
+// Push figure questions into the main pools
+g4_fig.forEach(f => { g4_easy.push(f); }); // figures are mixed into easy pool for variety
+g6_fig.forEach(f => { g6_easy.push(f); }); // same for grade 6
+
+// Also add some figure questions to medium pools
+// Grade 4 medium: L-shape perimeter figure
+g4_medium.push(
+  () => { const w = rand(3,5), h = rand(3,5), cut = rand(1,Math.min(w,h)-1);
+    const area = w*h - cut*cut;
+    const cs = 25;
+    let s = '';
+    for (let r=0;r<h;r++) for (let c=0;c<w;c++) {
+      if (r<cut && c>=w-cut) continue; // cut corner
+      s += rect(4+c*cs, 4+r*cs, cs, cs, '#b3e5fc', '#0288d1', 1);
+    }
+    const fig = svg(w*cs+8, h*cs+8, s);
+    return { q: `An L-shaped figure is made from a ${w}×${h} rectangle with a ${cut}×${cut} square cut from one corner. What is the area?`,
+      fig, ...makeMC(area, [w*h, area+1, area-cut]),
+      exp: `Rectangle area = ${w}×${h} = ${w*h}. Cut = ${cut}² = ${cut*cut}. L-shape = ${w*h} − ${cut*cut} = ${area}.` }; }
+);
+
+// Grade 6 medium: Symmetry figure
+g6_medium.push(
+  () => { const shapes = [
+    {name:'rectangle', pts:'10,10 90,10 90,50 10,50', lines:2},
+    {name:'equilateral triangle', pts:'50,5 10,70 90,70', lines:3},
+    {name:'regular pentagon', pts:'50,5 95,35 80,80 20,80 5,35', lines:5},
+    {name:'parallelogram', pts:'30,10 90,10 70,50 10,50', lines:0},
+  ];
+    const sh = pick(shapes);
+    let s = `<polygon points="${sh.pts}" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>`;
+    const fig = svg(100, 85, s);
+    return { q: `How many lines of symmetry does the ${sh.name} shown below have?`,
+      fig, ...makeMC(sh.lines, [sh.lines+1, sh.lines===0?2:sh.lines-1, 4]),
+      exp: `A ${sh.name} has ${sh.lines} line${sh.lines!==1?'s':''} of symmetry.` }; }
+);
+
+// Grade 4 hard: Painted cube figure
+g4_hard.push(
+  () => { const n = 3; const face = n*n; const cs = 20; const off = 8;
+    let s = '';
+    // Draw 3D-ish cube face (front)
+    for (let r=0;r<n;r++) for (let c=0;c<n;c++) {
+      s += rect(20+c*cs, 20+r*cs, cs, cs, '#e3f2fd', '#1565c0', 1);
+    }
+    // top face (parallelogram illusion)
+    for (let c=0;c<n;c++) {
+      const x = 20+c*cs+off; const y = 20-off;
+      s += `<polygon points="${x},${y} ${x+cs},${y} ${x+cs-off},${y+off} ${x-off},${y+off}" fill="#bbdefb" stroke="#1565c0" stroke-width="1"/>`;
+    }
+    // right face
+    for (let r=0;r<n;r++) {
+      const x = 20+n*cs; const y = 20+r*cs;
+      s += `<polygon points="${x},${y} ${x+off},${y-off} ${x+off},${y-off+cs} ${x},${y+cs}" fill="#90caf9" stroke="#1565c0" stroke-width="1"/>`;
+    }
+    const fig = svg(20+n*cs+off+10, 20+n*cs+10, s);
+    const edges = 12; const edgeCubes = edges * (n-2); // for n=3, edge cubes with 2 faces = 12
+    return { q: `A ${n}×${n}×${n} cube (shown below) is painted on all faces, then cut into unit cubes. How many small cubes have exactly 2 painted faces?`,
+      fig, ...makeMC(edgeCubes, [8, 6, 1]),
+      exp: `Edge cubes (not corners) have 2 painted faces. A cube has 12 edges, each with ${n}-2 = ${n-2} such cube(s). Total = 12 × ${n-2} = ${edgeCubes}.` }; }
+);
+
+// Grade 6 hard: Bar/pie style — distribution problem with figure
+g6_hard.push(
+  () => { const parts = [rand(2,4), rand(2,4), rand(2,4), rand(2,4)];
+    const total = parts.reduce((a,b)=>a+b,0);
+    const cs = 30;
+    let s = '';
+    let x = 10;
+    const colors = ['#e53935','#1e88e5','#43a047','#fdd835'];
+    parts.forEach((p,i) => {
+      for (let j=0;j<p;j++) { s += rect(x, 10, cs-2, cs-2, colors[i], '#333', 1); x += cs; }
+      x += 5;
+    });
+    const fig = svg(x+10, cs+20, s);
+    const q1 = rand(0,3), q2 = (q1+2)%4;
+    const diff = Math.abs(parts[q1]-parts[q2]);
+    const cNames = ['Red','Blue','Green','Yellow'];
+    return { q: `The figure shows blocks in 4 colour groups. How many more ${cNames[q1]} blocks than ${cNames[q2]} blocks are there?`,
+      fig, ...makeMC(diff, [parts[q1]+parts[q2], diff+1, total]),
+      exp: `${cNames[q1]} = ${parts[q1]}, ${cNames[q2]} = ${parts[q2]}. Difference = ${diff}.` }; }
+);
+
+const pools = {
+  4: { easy: g4_easy, medium: g4_medium, hard: g4_hard },
+  6: { easy: g6_easy, medium: g6_medium, hard: g6_hard },
+};
+
+// ============ SESSION-LEVEL DEDUPLICATION ============
+// Tracks which generators have been used in this browser session per pool.
+// Prevents same question TYPE from repeating across quizzes until pool is exhausted.
+const usedGens = {}; // key: "grade-difficulty" → Set of used generator indices
+
+function getUnusedOrder(pool, poolKey) {
+  if (!usedGens[poolKey]) usedGens[poolKey] = new Set();
+  const used = usedGens[poolKey];
+  // Get indices not yet used in this session
+  const unused = [];
+  const alreadyUsed = [];
+  for (let i = 0; i < pool.length; i++) {
+    if (!used.has(i)) unused.push(i);
+    else alreadyUsed.push(i);
+  }
+  // Shuffle unused first, then shuffle used as fallback
+  const order = [...unused.sort(() => Math.random() - 0.5), ...alreadyUsed.sort(() => Math.random() - 0.5)];
+  return order;
+}
+
+function markUsed(poolKey, indices) {
+  if (!usedGens[poolKey]) usedGens[poolKey] = new Set();
+  indices.forEach(i => {
+    usedGens[poolKey].add(i);
+    // Reset when all generators have been used (start fresh cycle)
+    if (usedGens[poolKey].size >= 999) usedGens[poolKey] = new Set(); // safety valve
+  });
+}
+
+// ============ QUIZ STATE ============
+let state = { grade: 4, difficulty: 'easy', count: 10, questions: [], idx: 0, score: 0, points: 0, fullExam: false, answered: false };
+
+// Kangaroo exam format (official):
+// Grade 4 (Ecolier): 24 questions = 8 easy (3 pts) + 8 medium (4 pts) + 8 hard (5 pts), max 96
+// Grade 6 (Benjamin): 30 questions = 10 easy (3 pts) + 10 medium (4 pts) + 10 hard (5 pts), max 120
+const EXAM_FORMAT = {
+  4: { easy: 8, medium: 8, hard: 8, total: 24, maxPts: 96 },
+  6: { easy: 10, medium: 10, hard: 10, total: 30, maxPts: 120 },
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function selectGrade(g) {
+  state.grade = g;
+  document.getElementById('grade-label').textContent = g;
+  const f = EXAM_FORMAT[g];
+  document.getElementById('full-exam-info').textContent =
+    `Grade ${g}: ${f.total} questions (${f.easy} easy · ${f.medium} medium · ${f.hard} hard) — max ${f.maxPts} points`;
+  showScreen('screen-config');
+}
+
+function startQuiz() {
+  state.fullExam = false;
+  state.difficulty = document.getElementById('difficulty-select').value;
+  state.count = parseInt(document.getElementById('count-select').value);
+  state.questions = generateQuestions(state.grade, state.difficulty, state.count);
+  state.idx = 0;
+  state.score = 0;
+  state.points = 0;
+  state.answered = false;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function startFullExam() {
+  state.fullExam = true;
+  state.difficulty = 'full';
+  const f = EXAM_FORMAT[state.grade];
+  const easyQs = buildTier(pools[state.grade].easy, f.easy, 'easy', 3);
+  const medQs  = buildTier(pools[state.grade].medium, f.medium, 'medium', 4);
+  const hardQs = buildTier(pools[state.grade].hard, f.hard, 'hard', 5);
+  state.questions = [...easyQs, ...medQs, ...hardQs]; // kept in tier order like the real exam
+  state.count = state.questions.length;
+  state.idx = 0;
+  state.score = 0;
+  state.points = 0;
+  state.answered = false;
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+
+function buildTier(pool, count, tier, pts) {
+  const poolKey = state.grade + '-' + tier;
+  const order = getUnusedOrder(pool, poolKey);
+  const usedIndices = [];
+  const qs = [];
+  for (let i = 0; i < count; i++) {
+    const genIdx = order[i % order.length];
+    const gen = pool[genIdx];
+    const q = gen();
+    q.tier = tier;
+    q.points = pts;
+    qs.push(q);
+    usedIndices.push(genIdx);
+  }
+  markUsed(poolKey, usedIndices);
+  // Reset pool tracking when all generators have been used at least once
+  if (usedGens[poolKey] && usedGens[poolKey].size >= pool.length) usedGens[poolKey] = new Set();
+  return qs;
+}
+
+function generateQuestions(grade, diff, count) {
+  const pool = pools[grade][diff];
+  const poolKey = grade + '-' + diff;
+  const order = getUnusedOrder(pool, poolKey);
+  const usedIndices = [];
+  const qs = [];
+  for (let i = 0; i < count; i++) {
+    const genIdx = order[i % order.length];
+    const gen = pool[genIdx];
+    qs.push(gen());
+    usedIndices.push(genIdx);
+  }
+  markUsed(poolKey, usedIndices);
+  // Reset when pool exhausted
+  if (usedGens[poolKey] && usedGens[poolKey].size >= pool.length) usedGens[poolKey] = new Set();
+  return shuffle(qs);
+}
+
+function renderQuestion() {
+  const q = state.questions[state.idx];
+  document.getElementById('q-num').textContent = `Question ${state.idx + 1} of ${state.count}`;
+  document.getElementById('score-now').textContent = state.fullExam ? `${state.points} pts` : state.score;
+  document.getElementById('question-text').textContent = q.q;
+  const figDiv = document.getElementById('question-figure');
+  figDiv.innerHTML = q.fig || '';
+  figDiv.style.display = q.fig ? 'block' : 'none';
+  document.getElementById('progress-fill').style.width = `${(state.idx / state.count) * 100}%`;
+
+  const badge = document.getElementById('tier-badge');
+  if (state.fullExam && q.tier) {
+    const colors = { easy: ['#e8f5e9','#1b5e20'], medium: ['#fff3e0','#e65100'], hard: ['#fce4ec','#880e4f'] };
+    badge.style.display = 'inline-block';
+    badge.style.background = colors[q.tier][0];
+    badge.style.color = colors[q.tier][1];
+    badge.textContent = `${q.tier.toUpperCase()} · ${q.points} pts`;
+  } else {
+    badge.style.display = 'none';
+  }
+
+  const optsDiv = document.getElementById('options');
+  optsDiv.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.textContent = opt;
+    btn.onclick = () => selectAnswer(opt, btn);
+    optsDiv.appendChild(btn);
+  });
+  document.getElementById('explanation').classList.remove('show');
+  document.getElementById('next-btn').style.display = 'none';
+  state.answered = false;
+}
+
+function selectAnswer(opt, btn) {
+  if (state.answered) return;
+  state.answered = true;
+  const q = state.questions[state.idx];
+  const correct = String(q.answer) === String(opt);
+  if (correct) {
+    state.score++;
+    if (state.fullExam) state.points += (q.points || 0);
+    btn.classList.add('correct');
+  } else { btn.classList.add('wrong'); }
+
+  // highlight correct
+  document.querySelectorAll('.option').forEach(b => {
+    b.classList.add('disabled');
+    if (b.textContent === String(q.answer)) b.classList.add('correct');
+  });
+
+  const expEl = document.getElementById('explanation');
+  expEl.innerHTML = `<strong>${correct ? '✅ Correct!' : '❌ Not quite.'}</strong> ${q.exp}`;
+  expEl.classList.add('show');
+  document.getElementById('score-now').textContent = state.fullExam ? `${state.points} pts` : state.score;
+  document.getElementById('next-btn').style.display = 'inline-block';
+  document.getElementById('next-btn').textContent = state.idx + 1 === state.count ? 'See Results →' : 'Next →';
+}
+
+function nextQuestion() {
+  state.idx++;
+  if (state.idx >= state.count) { showResults(); return; }
+  renderQuestion();
+}
+
+function showResults() {
+  showScreen('screen-results');
+  const pct = Math.round(state.score / state.count * 100);
+  if (state.fullExam) {
+    const f = EXAM_FORMAT[state.grade];
+    document.getElementById('final-score').textContent = `${state.points} / ${f.maxPts} pts`;
+    let msg;
+    if (state.points >= f.maxPts * 0.85) msg = '🌟 Outstanding! Kangaroo-ready!';
+    else if (state.points >= f.maxPts * 0.7) msg = '🎯 Great result! Very strong preparation.';
+    else if (state.points >= f.maxPts * 0.5) msg = '👍 Solid — keep practicing the harder sections.';
+    else msg = '📚 Keep practicing — review explanations and try again!';
+    document.getElementById('result-msg').innerHTML =
+      `${msg}<br><span style="font-size:15px;color:#777;">${state.score} of ${state.count} correct (${pct}%) — Grade ${state.grade} Full Mock Exam</span>`;
+  } else {
+    document.getElementById('final-score').textContent = `${state.score} / ${state.count}`;
+    let msg;
+    if (pct === 100) msg = '🌟 Perfect score! Amazing work!';
+    else if (pct >= 80) msg = '🎯 Great job! You are well prepared.';
+    else if (pct >= 60) msg = '👍 Good effort — keep practicing!';
+    else if (pct >= 40) msg = '💪 Keep going — practice makes perfect!';
+    else msg = '📚 Review the explanations and try again!';
+    document.getElementById('result-msg').textContent = `${msg} (${pct}%)`;
+  }
+}
+</script>
+</body>
+</html>
