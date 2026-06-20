@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a192f" />
+  <meta name="description" content="Gold Medalist Electrical Engineer | 20+ Years in DWDM, IPMPLS, FOC & AI | STC Saudi Arabia" />
+  <meta property="og:title" content="Saad Bin Mahmood — Portfolio" />
+  <meta property="og:description" content="Gold Medalist Electrical Engineer | 20+ Years in DWDM, IPMPLS, FOC & AI | STC Saudi Arabia" />
+  <meta property="og:type" content="website" />
+  <title>Saad Bin Mahmood — Portfolio</title>
+  <!-- NO external CSS or JS. 100% self-contained. Works on file:// with no internet. -->
+  <style>
+    /* ====================================================
+       RESET
+    ==================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: #0a192f;
+      color: #ccd6f6;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    a { color: #64ffda; text-decoration: none; }
+    a:hover, a:active { text-decoration: underline; color: #64ffda; }
+    img, svg { max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ====================================================
+       NAV
+    ==================================================== */
+    nav {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: #0d1f3c;
+      border-bottom: 1px solid #1a3050;
+      /* No fixed height — nav grows to hold mobile menu when open */
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-direction: column;
+              flex-direction: column;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+      width: 100%;
+      height: 64px;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+              align-items: center;
+      -webkit-justify-content: space-between;
+              justify-content: space-between;
+    }
+    .nav-logo {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #64ffda;
+      letter-spacing: 2px;
+    }
+    .nav-links {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+              align-items: center;
+    }
+    .nav-links a {
+      color: #ccd6f6;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-left: 28px;
+      min-height: 44px;
+      display: -webkit-inline-flex;
+      display: inline-flex;
+      -webkit-align-items: center;
+              align-items: center;
+      touch-action: manipulation;
+      -webkit-transition: color 0.2s;
+              transition: color 0.2s;
+    }
+    .nav-links a:hover, .nav-links a:active { color: #64ffda; text-decoration: none; }
+    .nav-links a .num { color: #64ffda; margin-right: 4px; font-size: 0.78rem; }
+
+    /* Hamburger — CSS spans, no icon font */
+    #hamburger {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 10px;
+      min-height: 44px;
+      min-width: 44px;
+      -webkit-flex-direction: column;
+              flex-direction: column;
+      -webkit-justify-content: center;
+              justify-content: center;
+      -webkit-align-items: center;
+              align-items: center;
+      touch-action: manipulation;
+    }
+    #hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #64ffda;
+      margin: 4px 0;
+      -webkit-transition: all 0.3s;
+              transition: all 0.3s;
+    }
+
+    /* Mobile dropdown menu — inside <nav>, normal flow, no position:fixed.
+       position:fixed is unreliable in WhatsApp WKWebView (iOS). */
+    #mobile-menu {
+      display: none;
+      -webkit-flex-direction: column;
+              flex-direction: column;
+      width: 100%;
+      background: #0a1628;
+      border-top: 1px solid #1e3a5f;
+      padding: 8px 24px 16px;
+    }
+    #mobile-menu a {
+      color: #ccd6f6;
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 10px 0;
+      min-height: 44px;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+              align-items: center;
+      border-bottom: 1px solid #1a3050;
+      touch-action: manipulation;
+    }
+    #mobile-menu a:last-child { border-bottom: none; }
+    #mobile-menu a:hover, #mobile-menu a:active { color: #64ffda; text-decoration: none; }
+    #mobile-menu a .num { color: #64ffda; margin-right: 8px; font-size: 0.8rem; }
+
+    /* ====================================================
+       SHARED SECTION STYLES
+    ==================================================== */
+    section { padding: 90px 0; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 32px; }
+
+    .section-heading {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #e6f1ff;
+      margin-bottom: 48px;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+              align-items: center;
+    }
+    .section-heading .num {
+      color: #64ffda;
+      font-size: 0.95rem;
+      font-weight: 400;
+      margin-right: 12px;
+    }
+    .section-heading::after {
+      content: '';
+      display: block;
+      height: 1px;
+      background: #1e3a5f;
+      -webkit-flex: 1;
+              flex: 1;
+      margin-left: 20px;
+      max-width: 260px;
+    }
+
+    /* ====================================================
+       HERO
+    ==================================================== */
+    #hero {
+      min-height: 100vh;
+      background: -webkit-linear-gradient(315deg, #0a192f 0%, #112240 100%);
+      background:         linear-gradient(135deg, #0a192f 0%, #112240 100%);
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+              align-items: center;
+      padding-top: 64px;
+      padding-bottom: 48px;
+    }
+    .hero-inner { max-width: 780px; }
+    .hero-greeting {
+      color: #64ffda;
+      font-size: 0.95rem;
+      letter-spacing: 3px;
+      margin-bottom: 14px;
+    }
+    .hero-name {
+      font-size: 42px;
+      font-weight: 700;
+      color: #e6f1ff;
+      line-height: 1.1;
+      margin-bottom: 10px;
+    }
+    .hero-subtitle {
+      font-size: 16px;
+      color: #8892b0;
+      margin-bottom: 28px;
+    }
+
+    /* Tagline — 3 coordinated phrases, only ONE visible at a time.
+       tp1 has opacity:1 by default (fallback if animation doesn't run).
+       tp2 and tp3 start hidden. All three use separate 9s keyframe
+       cycles so they never overlap. */
+    .tagline-container {
+      position: relative;
+      min-height: 3rem;   /* enough for a wrapped line on small screens */
+      margin-bottom: 36px;
+    }
+    .tp {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      color: #64ffda;
+      font-weight: 600;
+      font-size: 1rem;
+      margin: 0;
+      opacity: 0;        /* hidden by default */
+    }
+    /* tp1 is the safe fallback — visible if animations don't run */
+    .tp1 { opacity: 1; }
+
+    /* Each phrase owns a 9s cycle. Transitions are ~0.5s (5-6%). */
+    .tp1 { -webkit-animation: tp1fade 9s 0s infinite; animation: tp1fade 9s 0s infinite; }
+    .tp2 { -webkit-animation: tp2fade 9s 0s infinite; animation: tp2fade 9s 0s infinite; }
+    .tp3 { -webkit-animation: tp3fade 9s 0s infinite; animation: tp3fade 9s 0s infinite; }
+
+    /* Phrase 1: visible 0–3s, fades out, comes back at 9s */
+    @-webkit-keyframes tp1fade {
+      0%, 27%  { opacity: 1; }
+      33%      { opacity: 0; }
+      94%      { opacity: 0; }
+      100%     { opacity: 1; }
+    }
+    @keyframes tp1fade {
+      0%, 27%  { opacity: 1; }
+      33%      { opacity: 0; }
+      94%      { opacity: 0; }
+      100%     { opacity: 1; }
+    }
+    /* Phrase 2: visible 3–6s */
+    @-webkit-keyframes tp2fade {
+      0%, 33%  { opacity: 0; }
+      38%      { opacity: 1; }
+      60%      { opacity: 1; }
+      66%      { opacity: 0; }
+      100%     { opacity: 0; }
+    }
+    @keyframes tp2fade {
+      0%, 33%  { opacity: 0; }
+      38%      { opacity: 1; }
+      60%      { opacity: 1; }
+      66%      { opacity: 0; }
+      100%     { opacity: 0; }
+    }
+    /* Phrase 3: visible 6–9s */
+    @-webkit-keyframes tp3fade {
+      0%, 66%  { opacity: 0; }
+      71%      { opacity: 1; }
+      94%      { opacity: 1; }
+      100%     { opacity: 0; }
+    }
+    @keyframes tp3fade {
+      0%, 66%  { opacity: 0; }
+      71%      { opacity: 1; }
+      94%      { opacity: 1; }
+      100%     { opacity: 0; }
+    }
+
+    /* Metric chips */
+    .hero-chips { margin-bottom: 40px; }
+    .chip {
+      display: inline-block;
+      border: 1px solid rgba(100,255,218,0.4);
+      border-radius: 20px;
+      color: #64ffda;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    /* CTA button */
+    .hero-cta {
+      display: inline-block;
+      border: 1px solid #64ffda;
+      color: #64ffda;
+      padding: 14px 32px;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      min-height: 44px;
+      touch-action: manipulation;
+      -webkit-transition: background 0.2s;
+              transition: background 0.2s;
+    }
+    .hero-cta:hover, .hero-cta:active {
+      background: rgba(100,255,218,0.1);
+      text-decoration: none;
+    }
+
+    /* ====================================================
+       ABOUT
+    ==================================================== */
+    #about { background: #0a192f; }
+    .about-grid {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: flex-start;
+              align-items: flex-start;
+    }
+    .about-text { -webkit-flex: 3; flex: 3; margin-right: 48px; }
+    .about-text p { color: #8892b0; margin-bottom: 16px; line-height: 1.85; }
+    .about-stats { -webkit-flex: 2; flex: 2; }
+    .stat-card {
+      background: #112240;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 22px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    .stat-num {
+      display: block;
+      font-size: 32px;
+      font-weight: 700;
+      color: #64ffda;
+      line-height: 1.2;
+    }
+    .stat-label {
+      font-size: 13px;
+      color: #8892b0;
+      margin-top: 6px;
+      display: block;
+    }
+
+    /* ====================================================
+       SKILLS
+    ==================================================== */
+    #skills { background: #112240; }
+    .skills-grid {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+              flex-wrap: wrap;
+    }
+    .skill-cat { -webkit-flex: 1 1 240px; flex: 1 1 240px; margin-right: 32px; margin-bottom: 32px; }
+    .skill-cat:last-child { margin-right: 0; }
+    .skill-cat-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64ffda;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .badge {
+      display: inline-block;
+      border: 1px solid #64ffda;
+      color: #64ffda;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 13px;
+      margin-right: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* ====================================================
+       PROJECTS
+    ==================================================== */
+    #projects { background: #0a192f; }
+    .projects-grid {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+              flex-wrap: wrap;
+    }
+    .project-card {
+      -webkit-flex: 1 1 300px;
+              flex: 1 1 300px;
+      background: #112240;
+      border-left: 4px solid #64ffda;
+      border-radius: 4px;
+      padding: 26px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+    }
+    .project-card-top {
+      display: -webkit-flex;
+      display: flex;
+      -webkit-justify-content: space-between;
+              justify-content: space-between;
+      -webkit-align-items: flex-start;
+              align-items: flex-start;
+      margin-bottom: 10px;
+    }
+    .project-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e6f1ff;
+      line-height: 1.4;
+      -webkit-flex: 1;
+              flex: 1;
+      margin-right: 10px;
+    }
+    .project-tag {
+      background: rgba(100,255,218,0.08);
+      color: #64ffda;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 11px;
+      white-space: nowrap;
+      -webkit-flex-shrink: 0;
+              flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .project-desc { font-size: 14px; color: #8892b0; line-height: 1.75; }
+
+    /* ====================================================
+       EXPERIENCE
+    ==================================================== */
+    #experience { background: #112240; }
+    .timeline {
+      border-left: 2px solid rgba(100,255,218,0.25);
+      padding-left: 28px;
+      margin-left: 6px;
+    }
+    .timeline-entry { margin-bottom: 48px; position: relative; }
+    .timeline-entry:last-child { margin-bottom: 0; }
+    .timeline-dot {
+      position: absolute;
+      left: -36px;
+      top: 6px;
+      width: 10px;
+      height: 10px;
+      background: #64ffda;
+      border-radius: 50%;
+      border: 2px solid #112240;
+      box-shadow: 0 0 0 3px rgba(100,255,218,0.2);
+    }
+    .entry-company {
+      font-size: 16px;
+      font-weight: 700;
+      color: #e6f1ff;
+      margin-bottom: 2px;
+    }
+    .entry-role { font-size: 14px; color: #64ffda; font-weight: 500; margin-bottom: 2px; }
+    .entry-date { font-size: 12px; color: #8892b0; margin-bottom: 12px; }
+    .entry-bullets { padding-left: 0; }
+    .entry-bullets li {
+      color: #8892b0;
+      font-size: 14px;
+      line-height: 1.75;
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+    .entry-bullets li::before {
+      content: '▹';
+      position: absolute;
+      left: 0;
+      color: #64ffda;
+    }
+
+    /* ====================================================
+       EDUCATION
+    ==================================================== */
+    #education { background: #0a192f; }
+    .edu-card {
+      background: #112240;
+      border: 1px solid #1e3a5f;
+      border-radius: 8px;
+      padding: 40px;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+              align-items: center;
+      max-width: 640px;
+    }
+    .edu-icon { margin-right: 28px; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .edu-degree { font-size: 18px; font-weight: 700; color: #e6f1ff; margin-bottom: 6px; }
+    .edu-major  { font-size: 14px; color: #64ffda; margin-bottom: 6px; }
+    .edu-inst   { font-size: 13px; color: #8892b0; margin-bottom: 10px; }
+    .gold-badge {
+      display: inline-block;
+      background: rgba(240,192,64,0.1);
+      border: 1px solid rgba(240,192,64,0.4);
+      color: #f0c040;
+      border-radius: 12px;
+      padding: 3px 12px;
+      font-size: 12px;
+    }
+
+    /* ====================================================
+       CONTACT
+    ==================================================== */
+    #contact { background: #112240; text-align: center; }
+    .contact-heading {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #e6f1ff;
+      margin-bottom: 16px;
+    }
+    .contact-sub { color: #8892b0; max-width: 460px; margin: 0 auto 40px; line-height: 1.8; }
+    .contact-btns { display: -webkit-flex; display: flex; -webkit-justify-content: center; justify-content: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+    .contact-btn {
+      display: -webkit-inline-flex;
+      display: inline-flex;
+      -webkit-align-items: center;
+              align-items: center;
+      border: 1px solid #64ffda;
+      color: #64ffda;
+      padding: 14px 24px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      min-height: 44px;
+      margin: 8px;
+      touch-action: manipulation;
+      -webkit-transition: background 0.2s;
+              transition: background 0.2s;
+    }
+    .contact-btn svg { margin-right: 10px; -webkit-flex-shrink: 0; flex-shrink: 0; }
+    .contact-btn:hover, .contact-btn:active {
+      background: rgba(100,255,218,0.1);
+      text-decoration: none;
+    }
+
+    /* ====================================================
+       FOOTER
+    ==================================================== */
+    footer {
+      background: #071527;
+      text-align: center;
+      padding: 26px 20px;
+      color: #8892b0;
+      font-size: 13px;
+      border-top: 1px solid #0d1f3c;
+    }
+    footer span { color: #64ffda; }
+
+    /* ====================================================
+       PAGE-LOAD SECTION FADE (additive — content always visible)
+    ==================================================== */
+    section {
+      -webkit-animation: sectionIn 0.5s ease;
+              animation: sectionIn 0.5s ease;
+    }
+    @-webkit-keyframes sectionIn { from { opacity: 0.3; } to { opacity: 1; } }
+    @keyframes sectionIn         { from { opacity: 0.3; } to { opacity: 1; } }
+
+    /* ====================================================
+       RESPONSIVE — mobile ≤ 768px
+    ==================================================== */
+    @media (max-width: 768px) {
+      .container { padding: 0 20px; }
+      section { padding: 64px 0; }
+
+      /* Show hamburger, hide desktop nav links */
+      #hamburger { display: -webkit-flex; display: flex; }
+      .nav-links  { display: none; }
+
+      /* About: stack vertically */
+      .about-grid { -webkit-flex-direction: column; flex-direction: column; }
+      .about-text { margin-right: 0; margin-bottom: 28px; }
+      .about-stats { width: 100%; display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; }
+      .stat-card { -webkit-flex: 1 1 140px; flex: 1 1 140px; margin-right: 12px; }
+      .stat-card:last-child { margin-right: 0; }
+
+      /* Hero */
+      .hero-name { font-size: 28px; }
+      .tagline-static, .tagline-cycle { font-size: 0.88rem; }
+
+      /* Section heading line */
+      .section-heading::after { display: none; }
+
+      /* Projects: single column */
+      .project-card { -webkit-flex: 1 1 100%; flex: 1 1 100%; margin-right: 0; }
+      .project-card-top { -webkit-flex-direction: column; flex-direction: column; gap: 6px; }
+
+      /* Education card */
+      .edu-card { -webkit-flex-direction: column; flex-direction: column; text-align: center; padding: 28px 20px; }
+      .edu-icon { margin-right: 0; margin-bottom: 16px; }
+
+      /* Contact buttons full width */
+      .contact-btn { width: 100%; -webkit-justify-content: center; justify-content: center; margin: 6px 0; }
+
+      /* Skills */
+      .skill-cat { margin-right: 0; -webkit-flex: 1 1 100%; flex: 1 1 100%; }
+    }
+
+    @media (max-width: 400px) {
+      .hero-name { font-size: 24px; }
+      .chip { font-size: 12px; padding: 5px 12px; }
+      .stat-card { -webkit-flex: 1 1 100%; flex: 1 1 100%; margin-right: 0; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== NAV ===================== -->
+  <nav>
+    <div class="nav-inner">
+      <div class="nav-logo">SBM</div>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#about"><span class="num">01.</span>About</a></li>
+        <li><a href="#skills"><span class="num">02.</span>Skills</a></li>
+        <li><a href="#projects"><span class="num">03.</span>Projects</a></li>
+        <li><a href="#experience"><span class="num">04.</span>Experience</a></li>
+        <li><a href="#education"><span class="num">05.</span>Education</a></li>
+        <li><a href="#contact"><span class="num">06.</span>Contact</a></li>
+      </ul>
+
+      <!-- Hamburger: three CSS-drawn bars, no icon font -->
+      <button id="hamburger" aria-label="Open navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <!-- Mobile menu sits INSIDE <nav> so it inherits sticky positioning.
+         No position:fixed needed — avoids WKWebView rendering bugs. -->
+    <div id="mobile-menu" role="navigation" aria-label="Mobile menu">
+      <a href="#about"      onclick="closeMobileMenu()"><span class="num">01.</span>About</a>
+      <a href="#skills"     onclick="closeMobileMenu()"><span class="num">02.</span>Skills</a>
+      <a href="#projects"   onclick="closeMobileMenu()"><span class="num">03.</span>Projects</a>
+      <a href="#experience" onclick="closeMobileMenu()"><span class="num">04.</span>Experience</a>
+      <a href="#education"  onclick="closeMobileMenu()"><span class="num">05.</span>Education</a>
+      <a href="#contact"    onclick="closeMobileMenu()"><span class="num">06.</span>Contact</a>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-inner">
+        <p class="hero-greeting">Hi, my name is</p>
+        <h1 class="hero-name">Saad Bin Mahmood.</h1>
+        <p class="hero-subtitle">Gold Medalist Electrical Engineer &nbsp;·&nbsp; DWDM &nbsp;·&nbsp; IPMPLS &nbsp;·&nbsp; FOC &nbsp;·&nbsp; AI</p>
+
+        <!-- Coordinated 3-phrase cycle. Only ONE phrase visible at a time.
+             tp1 has opacity:1 in CSS so it shows even if animations fail. -->
+        <div class="tagline-container">
+          <p class="tp tp1">Building telecom infrastructure at national scale.</p>
+          <p class="tp tp2">Turning fiber optic science into engineering reality.</p>
+          <p class="tp tp3">Automating transport operations with Python &amp; AI.</p>
+        </div>
+
+        <div class="hero-chips">
+          <span class="chip">&#x1F4C5; 20+ Years Experience</span>
+          <span class="chip">&#x1F4E1; 150,000 km FOC Managed</span>
+          <span class="chip">&#x1F4B0; ~2M SAR Savings Delivered</span>
+        </div>
+
+        <a href="#contact" class="hero-cta">Get In Touch</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about">
+    <div class="container">
+      <h2 class="section-heading"><span class="num">01.</span>About Me</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>With over 20 years in telecom, I specialize in DWDM, IPMPLS, and fiber optic infrastructure. At STC — Saudi Arabia's largest telecom company — I lead governance, network resilience, and Python-driven automation that has fundamentally transformed how the Transport domain operates.</p>
+          <p>My career spans the full arc of fiber optics: from pioneering laboratory research on interferometric sensors at AERO Pakistan, to managing 150,000 km of live national fiber network, to building Python tools that eliminated manual effort across entire operations teams.</p>
+          <p>I combine deep telecom engineering with modern AI, DevOps, and cloud tooling to solve problems at national scale. I believe the best systems are the ones that run themselves.</p>
+        </div>
+        <div class="about-stats">
+          <div class="stat-card">
+            <span class="stat-num">20+</span>
+            <span class="stat-label">Years of Experience</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">150K km</span>
+            <span class="stat-label">FOC Network Managed</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-num">2M SAR</span>
+            <span class="stat-label">Annual Savings Delivered</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== SKILLS ===================== -->
+  <section id="skills">
+    <div class="container">
+      <h2 class="section-heading"><span class="num">02.</span>Skills</h2>
+      <div class="skills-grid">
+
+        <div class="skill-cat">
+          <div class="skill-cat-label">Optical Networks</div>
+          <span class="badge">DWDM</span>
+          <span class="badge">IPMPLS</span>
+          <span class="badge">FOC</span>
+          <span class="badge">FTTx</span>
+          <span class="badge">OTDR</span>
+          <span class="badge">EDFA</span>
+          <span class="badge">WDM</span>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat-label">Programming &amp; AI</div>
+          <span class="badge">Python</span>
+          <span class="badge">NumPy</span>
+          <span class="badge">Pandas</span>
+          <span class="badge">Streamlit</span>
+          <span class="badge">TensorFlow</span>
+          <span class="badge">MATLAB</span>
+          <span class="badge">LabVIEW</span>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat-label">DevOps &amp; Cloud</div>
+          <span class="badge">Docker</span>
+          <span class="badge">Kubernetes</span>
+          <span class="badge">Red Hat Linux</span>
+          <span class="badge">AWS SageMaker</span>
+          <span class="badge">GitLab</span>
+          <span class="badge">YAML</span>
+        </div>
+
+        <div class="skill-cat">
+          <div class="skill-cat-label">Management &amp; Standards</div>
+          <span class="badge">ISO9001</span>
+          <span class="badge">MS Project</span>
+          <span class="badge">RFP Development</span>
+          <span class="badge">OLA / WLA</span>
+          <span class="badge">NE Tool</span>
+          <span class="badge">Matplotlib</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PROJECTS ===================== -->
+  <section id="projects">
+    <div class="container">
+      <h2 class="section-heading"><span class="num">03.</span>Projects</h2>
+      <div class="projects-grid">
+
+        <div class="project-card">
+          <div class="project-card-top">
+            <div class="project-title">Service Inventory Automation Tool</div>
+            <span class="project-tag">Python · Pandas · Streamlit</span>
+          </div>
+          <p class="project-desc">Reads hundreds of Tx NMS Excel trails and databases to generate an end-to-end service inventory at STC. Eliminated manual effort across the entire Transport domain.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-top">
+            <div class="project-title">Impact Analysis Tool</div>
+            <span class="project-tag">Python · Automation</span>
+          </div>
+          <p class="project-desc">First-ever fault &amp; change simulation tool in STC's Transport domain. Used daily by Fault Management and Change Management teams for network simulation.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-top">
+            <div class="project-title">Network Resilience Program</div>
+            <span class="project-tag">STC · Governance</span>
+          </div>
+          <p class="project-desc">Led verification of 1500+ rings, links, sites, and nodes across the national transport network. Produced the official Resilience Guidelines for STC Transport Network.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-top">
+            <div class="project-title">Fiber Optic Sensor Test System</div>
+            <span class="project-tag">LabVIEW · MATLAB · GPIB</span>
+          </div>
+          <p class="project-desc">Fully automated test platform for interferometric FOC sensors based on Sagnac interferometry. Zero human intervention required during test cycles.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-top">
+            <div class="project-title">FBT Manufacturing Process</div>
+            <span class="project-tag">Electro-Optics · R&amp;D</span>
+          </div>
+          <p class="project-desc">Designed the fused biconical taper process to manufacture 3dB couplers, WDM (1310/1550), tap couplers, and fiber optic attenuators for communications systems.</p>
+        </div>
+
+        <div class="project-card">
+          <div class="project-card-top">
+            <div class="project-title">ISO9001 Certification</div>
+            <span class="project-tag">Quality · Leadership</span>
+          </div>
+          <p class="project-desc">Team lead for the ISO9001 certification program at STC Transport. Successfully achieved certification for the entire Transport Network Operations department.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <section id="experience">
+    <div class="container">
+      <h2 class="section-heading"><span class="num">04.</span>Experience</h2>
+      <div class="timeline">
+
+        <div class="timeline-entry">
+          <div class="timeline-dot"></div>
+          <div class="entry-company">STC — Saudi Telecom Company</div>
+          <div class="entry-role">Infrastructure Operation Assistant Manager</div>
+          <div class="entry-date">Dec 2016 – Present</div>
+          <ul class="entry-bullets">
+            <li>Governance team lead for Transmission MSP Contractor and TAC vendors; part of Technical Committee that created the RFP and handed over the network to a new contractor.</li>
+            <li>Built Python / Pandas / Streamlit service inventory and impact analysis tools now adopted across the Transport domain; created customized dashboards and automated reports.</li>
+            <li>Led team that achieved ISO9001 Certification for Transport Operations; took over Cloud infrastructure — Docker, Kubernetes, Red Hat Linux, GitLab.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-dot"></div>
+          <div class="entry-company">STC Solutions (STCs)</div>
+          <div class="entry-role">Technical Supervisor</div>
+          <div class="entry-date">Mar 2014 – Dec 2016</div>
+          <ul class="entry-bullets">
+            <li>Managed PAT activities for Transmission and IPMPLS networks across the kingdom.</li>
+            <li>Initiated and staffed a FOC governance section with 40+ engineers and supervisors to improve MSP contractor oversight.</li>
+            <li>Established an automated Network Change Management system across Transmission, Mobile, and Data NOCs.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-dot"></div>
+          <div class="entry-company">Detecon Al Saudia Co. Ltd</div>
+          <div class="entry-role">Communication Engineer</div>
+          <div class="entry-date">Jan 2009 – Jan 2014</div>
+          <ul class="entry-bullets">
+            <li>Managed O&amp;M of STC's 150,000 km fiber optic network across the Kingdom, including FTTx; reported directly to Director Operations.</li>
+            <li>Led a team of 12 engineers, 23 supervisors, and ~250 technicians as Head of the FOC group.</li>
+            <li>Identified procurement optimizations delivering ~2 million SAR in annual savings without compromising quality.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-dot"></div>
+          <div class="entry-company">WorldCall Telecom, Pakistan</div>
+          <div class="entry-role">Assistant Manager OFC</div>
+          <div class="entry-date">Jan 2008 – Jan 2009</div>
+          <ul class="entry-bullets">
+            <li>Planned and implemented a 6-way fiber optic duct system across Islamabad (CDA project).</li>
+            <li>Managed metro fiber O&amp;M for WorldCall, Telenor (North Zone), and Wateen Telecom networks simultaneously.</li>
+          </ul>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-dot"></div>
+          <div class="entry-company">AERO — Advance Engineering Research Organization</div>
+          <div class="entry-role">Assistant Manager Electro-Optics</div>
+          <div class="entry-date">Jul 2001 – Dec 2007</div>
+          <ul class="entry-bullets">
+            <li>Pioneer member of the Electro-Optics team; conducted research on interferometric fiber optic sensors based on Sagnac interferometry.</li>
+            <li>Developed FBT process to manufacture 3dB couplers, WDM, tap couplers, and attenuators; conducted feasibility studies on DWDM components.</li>
+            <li>Built a fully automated fiber optic sensor test setup using LabVIEW, MATLAB, RS232/GPIB — zero manual intervention required.</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== EDUCATION ===================== -->
+  <section id="education">
+    <div class="container">
+      <h2 class="section-heading"><span class="num">05.</span>Education</h2>
+      <div class="edu-card">
+        <div class="edu-icon">
+          <!-- Inline SVG medal — no CDN needed -->
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#f0c040" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="15" r="6"/>
+            <path d="M8.5 8.5 6 6l2-4h8l2 4-2.5 2.5"/>
+            <path d="m15 9-3 3-3-3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="edu-degree">B.Sc Electrical Engineering</div>
+          <div class="edu-major">Major in Electronics &amp; Telecommunication</div>
+          <div class="edu-inst">University College of Engineering &amp; Technology, Mirpur (AK) &nbsp;·&nbsp; 2001</div>
+          <span class="gold-badge">🥇 Gold Medalist</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact">
+    <div class="container">
+      <h2 class="contact-heading">Get In Touch</h2>
+      <p class="contact-sub">Whether it's a technical discussion, collaboration opportunity, or just a professional hello — my inbox is open.</p>
+      <div class="contact-btns">
+
+        <!-- Email — inline SVG, no Font Awesome -->
+        <a href="mailto:saadbinmehmood@gmail.com" class="contact-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          saadbinmehmood@gmail.com
+        </a>
+
+        <!-- WhatsApp — inline SVG, no Font Awesome -->
+        <a href="https://wa.me/966534355722" target="_blank" rel="noopener noreferrer" class="contact-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.116 1.528 5.845L.057 23.272a.75.75 0 0 0 .92.92l5.427-1.471A11.951 11.951 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.9 0-3.68-.524-5.2-1.436l-.373-.222-3.844 1.042 1.042-3.844-.222-.373A9.951 9.951 0 0 1 2 12c0-5.514 4.486-10 10-10s10 4.486 10 10-4.486 10-10 10z"/>
+          </svg>
+          +966-534355722
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer>
+    <p>Designed &amp; Built by <span>Saad Bin Mahmood</span> &nbsp;&middot;&nbsp; &copy; 2026</p>
+  </footer>
+
+  <!-- ===================== JAVASCRIPT =====================
+       PURPOSE: hamburger toggle + nav highlight ONLY.
+       JS never sets opacity, visibility, or display on content.
+       All content is fully visible without JS.
+  ======================================================= -->
+  <script>
+    function closeMobileMenu() {
+      document.getElementById('mobile-menu').style.display = 'none';
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // --- Hamburger toggle ---
+      var btn  = document.getElementById('hamburger');
+      var menu = document.getElementById('mobile-menu');
+
+      if (btn && menu) {
+        // Toggle menu on hamburger click
+        btn.addEventListener('click', function () {
+          var isOpen = menu.style.display === 'flex';
+          menu.style.display = isOpen ? 'none' : 'flex';
+        });
+
+        // Close menu when tapping anywhere outside it —
+        // but skip if the click came from the hamburger button itself.
+        // Using btn.contains() instead of stopPropagation(), which is
+        // unreliable in iOS WKWebView (used by WhatsApp on iPhone).
+        document.addEventListener('click', function (e) {
+          if (btn.contains(e.target)) { return; }
+          if (menu.style.display === 'flex') {
+            menu.style.display = 'none';
+          }
+        });
+      }
+
+      // --- Active nav link highlight on scroll (visual only) ---
+      var sections = document.querySelectorAll('section[id]');
+      var navAs    = document.querySelectorAll('#nav-links a');
+
+      window.addEventListener('scroll', function () {
+        var pos = window.scrollY + 90;
+        sections.forEach(function (s) {
+          if (pos >= s.offsetTop && pos < s.offsetTop + s.offsetHeight) {
+            navAs.forEach(function (a) {
+              a.style.color = (a.getAttribute('href') === '#' + s.id)
+                ? '#64ffda' : '#ccd6f6';
+            });
+          }
+        });
+      }, { passive: true });
+
+    });
+  </script>
+
+</body>
+</html>
