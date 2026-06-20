@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Prompting Lab — Assignment Feedback | Saad</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #f5f4f0;
+      --surface:   #ffffff;
+      --border:    #e2e0d8;
+      --teal:      #1a9e8f;
+      --teal-light:#e6f5f3;
+      --orange:    #e07b39;
+      --orange-light:#fef3ea;
+      --purple:    #7c5cbf;
+      --purple-light:#f2eefb;
+      --green:     #3a9e5f;
+      --green-light:#eaf6ef;
+      --red:       #c0392b;
+      --red-light: #fdecea;
+      --text:      #2c2c2c;
+      --muted:     #6b6b6b;
+      --tag-daily-bg:  #1a9e8f;
+      --tag-work-bg:   #7c5cbf;
+      --accent:    #0d7a6e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    /* ── Layout ── */
+    .wrapper { display: flex; min-height: 100vh; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: #1e2330;
+      color: #c8cdd8;
+      padding: 32px 20px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 6px;
+    }
+    .sidebar-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 28px;
+      line-height: 1.3;
+    }
+    .sidebar nav a {
+      display: block;
+      padding: 7px 10px;
+      margin-bottom: 2px;
+      border-radius: 6px;
+      color: #c8cdd8;
+      text-decoration: none;
+      font-size: 13.5px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .sidebar nav a:hover,
+    .sidebar nav a.active {
+      background: rgba(26,158,143,0.18);
+      color: #ffffff;
+    }
+    .sidebar nav .section-label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #5a6072;
+      padding: 14px 10px 4px;
+    }
+    .sidebar-footer {
+      margin-top: 32px;
+      font-size: 12px;
+      color: #3f4659;
+      border-top: 1px solid #2e3347;
+      padding-top: 16px;
+    }
+
+    /* ── Main ── */
+    .main { flex: 1; overflow-x: hidden; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #0d7a6e 0%, #1a2a4a 100%);
+      color: #ffffff;
+      padding: 64px 60px 56px;
+    }
+    .hero-label {
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.78);
+      max-width: 620px;
+      margin-bottom: 28px;
+    }
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* ── Content sections ── */
+    .content { padding: 52px 60px; }
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .hero { padding: 40px 24px; }
+      .content { padding: 32px 20px; }
+      .hero h1 { font-size: 28px; }
+    }
+
+    /* ── Section headings ── */
+    .section { margin-bottom: 60px; }
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal-light);
+      color: var(--accent);
+      border: 1px solid #b2e0da;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .section h2 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+    .section-intro {
+      color: var(--muted);
+      font-size: 15.5px;
+      max-width: 680px;
+      margin-bottom: 28px;
+    }
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 52px 0;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 26px;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+    .card-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .n-teal   { background: var(--teal-light);   color: var(--teal); }
+    .n-orange { background: var(--orange-light);  color: var(--orange); }
+    .n-purple { background: var(--purple-light);  color: var(--purple); }
+    .n-green  { background: var(--green-light);   color: var(--green); }
+    .n-red    { background: var(--red-light);     color: var(--red); }
+
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1a1a1a;
+      line-height: 1.3;
+    }
+    .card-subtitle {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+    .card p {
+      font-size: 15px;
+      color: #3c3c3c;
+      line-height: 1.75;
+      margin-top: 4px;
+    }
+    .card ul, .card ol {
+      margin-left: 20px;
+      margin-top: 8px;
+    }
+    .card li {
+      font-size: 15px;
+      color: #3c3c3c;
+      line-height: 1.75;
+      margin-bottom: 4px;
+    }
+
+    /* Takeaway strip */
+    .takeaway {
+      background: #fffbee;
+      border-left: 4px solid #e8b84b;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin-top: 14px;
+      font-size: 14px;
+      color: #5a4a1a;
+    }
+    .takeaway strong { color: #3d320a; }
+
+    /* ── Grid ── */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 780px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Technique cards (highlighted) ── */
+    .technique-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      border-top: 4px solid var(--teal);
+      position: relative;
+    }
+    .technique-card.orange { border-top-color: var(--orange); }
+    .technique-card.purple { border-top-color: var(--purple); }
+    .technique-card.green  { border-top-color: var(--green); }
+    .technique-card.red    { border-top-color: var(--red); }
+    .technique-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+    .technique-card p {
+      font-size: 14.5px;
+      color: #444;
+      line-height: 1.7;
+    }
+    .rank-badge {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 12px;
+      background: var(--teal-light);
+      color: var(--accent);
+    }
+    .rank-badge.orange { background: var(--orange-light); color: var(--orange); }
+    .rank-badge.purple { background: var(--purple-light); color: var(--purple); }
+    .rank-badge.green  { background: var(--green-light);  color: var(--green);  }
+    .rank-badge.red    { background: var(--red-light);    color: var(--red);    }
+
+    /* ── Challenge cards ── */
+    .challenge-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .challenge-top {
+      background: var(--red-light);
+      border-bottom: 1px solid #f5c6c2;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .challenge-icon { font-size: 20px; }
+    .challenge-title { font-size: 15.5px; font-weight: 700; color: var(--red); }
+    .challenge-body { padding: 16px 20px; }
+    .challenge-body p { font-size: 14.5px; color: #3c3c3c; line-height: 1.72; }
+    .solution-strip {
+      background: var(--green-light);
+      border-top: 1px solid #b8e6cc;
+      padding: 12px 20px;
+      font-size: 14px;
+      color: #1e5c3a;
+    }
+    .solution-strip strong { color: #145228; }
+
+    /* ── Progress bar ── */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .progress-label { font-size: 14px; color: var(--text); width: 200px; flex-shrink: 0; }
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--teal);
+      transition: width 1s ease;
+    }
+    .progress-pct { font-size: 13px; font-weight: 700; color: var(--teal); width: 36px; text-align: right; }
+
+    /* ── Quote / callout ── */
+    .callout {
+      background: var(--teal-light);
+      border: 1px solid #b2e0da;
+      border-radius: 10px;
+      padding: 18px 22px;
+      margin: 20px 0;
+      font-size: 15px;
+      color: #0d4f46;
+      font-style: italic;
+    }
+    .callout strong { font-style: normal; color: var(--accent); }
+
+    /* ── Summary table ── */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+      margin-top: 12px;
+    }
+    .summary-table th {
+      background: #f0f0ec;
+      text-align: left;
+      padding: 10px 14px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .summary-table td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      color: #3c3c3c;
+      vertical-align: top;
+    }
+    .summary-table tr:last-child td { border-bottom: none; }
+    .summary-table tr:hover td { background: #fafaf8; }
+    .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .dot-teal   { background: var(--teal); }
+    .dot-orange { background: var(--orange); }
+    .dot-purple { background: var(--purple); }
+    .dot-green  { background: var(--green); }
+
+    /* ── Conclusion box ── */
+    .conclusion {
+      background: linear-gradient(135deg, #0d7a6e 0%, #1a2a4a 100%);
+      border-radius: 16px;
+      padding: 40px 44px;
+      color: #ffffff;
+    }
+    .conclusion h2 { font-size: 26px; font-weight: 800; margin-bottom: 14px; }
+    .conclusion p { font-size: 15.5px; color: rgba(255,255,255,0.82); line-height: 1.75; max-width: 680px; margin-bottom: 12px; }
+    .conclusion p:last-child { margin-bottom: 0; }
+
+    /* ── Footer ── */
+    .footer {
+      background: #1e2330;
+      color: #5a6072;
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+    }
+    .footer span { color: #8a92a8; }
+
+    /* ── Scroll to top ── */
+    #scroll-top {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 100;
+    }
+    #scroll-top.visible { opacity: 1; }
+
+    /* ── Pill tags ── */
+    .pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+    .pill-part { background: #e8e6f0; color: #4a3f7a; }
+
+    /* ── Exercise grid (overview) ── */
+    .ex-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .ex-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .ex-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ex-name { font-size: 13px; font-weight: 600; color: #2a2a2a; line-height: 1.35; }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">Assignment</div>
+    <div class="sidebar-title">AI Prompting Lab Feedback</div>
+    <nav>
+      <div class="section-label">Sections</div>
+      <a href="#overview">Lab Overview</a>
+      <a href="#learnings">What I Learned</a>
+      <a href="#improvement">Prompting Improvement</a>
+      <a href="#techniques">Best Techniques</a>
+      <a href="#challenges">Challenges & Solutions</a>
+      <a href="#conclusion">Conclusion</a>
+    </nav>
+    <div class="sidebar-footer">
+      Saad Mehmood<br/>
+      AI Prompting Lab · 13 Exercises<br/>
+      June 2026
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-label">Assignment Submission · AI Prompting Lab</div>
+      <h1>Reflections on the<br/>AI Prompting Lab</h1>
+      <p>A comprehensive written feedback covering all 13 hands-on exercises — what I learned, how my prompting evolved, which techniques worked best, and the challenges I navigated along the way.</p>
+      <div class="hero-meta">
+        <span class="hero-badge">📚 13 Exercises</span>
+        <span class="hero-badge">4 Parts</span>
+        <span class="hero-badge">~2 Hours</span>
+        <span class="hero-badge">Submitted by Saad Mehmood</span>
+      </div>
+    </section>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- ─── SECTION 0: OVERVIEW ─── -->
+      <section class="section" id="overview">
+        <div class="section-badge">📋 Lab Overview</div>
+        <h2>What Is This Lab About?</h2>
+        <p class="section-intro">The AI Prompting Lab is a structured, 13-exercise hands-on course organized around one central principle: <em>"Get the right context in, keep the wrong context out."</em> It spans four parts — how AI knows things, talking to AI well, going beyond text, and working safely with tools.</p>
+
+        <div class="callout">
+          <strong>The One Rule Behind All 13:</strong> "Get the right context in, keep the wrong context out." — Every single exercise in the lab, from beginner prompts to cross-model verification, is a direct application of this idea.
+        </div>
+
+        <div class="ex-grid">
+          <div class="ex-item"><div class="ex-num n-teal">1</div><div class="ex-name">Novice vs. Power User</div></div>
+          <div class="ex-item"><div class="ex-num n-teal">2</div><div class="ex-name">Knows vs. Guesses</div></div>
+          <div class="ex-item"><div class="ex-num n-teal">3</div><div class="ex-name">The 3 Retrieval Modes</div></div>
+          <div class="ex-item"><div class="ex-num n-orange">4</div><div class="ex-name">Context Is Everything</div></div>
+          <div class="ex-item"><div class="ex-num n-orange">5</div><div class="ex-name">Think Hard</div></div>
+          <div class="ex-item"><div class="ex-num n-orange">6</div><div class="ex-name">Stop the Flattery</div></div>
+          <div class="ex-item"><div class="ex-num n-orange">7</div><div class="ex-name">Brainstorm–Iterate Loop</div></div>
+          <div class="ex-item"><div class="ex-num n-purple">8</div><div class="ex-name">Multimodal (Image/Audio)</div></div>
+          <div class="ex-item"><div class="ex-num n-purple">9</div><div class="ex-name">Build a Small App</div></div>
+          <div class="ex-item"><div class="ex-num n-purple">10</div><div class="ex-name">Data Analysis</div></div>
+          <div class="ex-item"><div class="ex-num n-green">11</div><div class="ex-name">Desktop Apps & Permissions</div></div>
+          <div class="ex-item"><div class="ex-num n-green">12</div><div class="ex-name">Which Model When</div></div>
+          <div class="ex-item"><div class="ex-num n-green">13</div><div class="ex-name">Models Checking Models</div></div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ─── SECTION 1: LEARNINGS ─── -->
+      <section class="section" id="learnings">
+        <div class="section-badge">🧠 Key Learnings</div>
+        <h2>What I Learned from the Lab</h2>
+        <p class="section-intro">Each of the 13 exercises revealed a distinct, actionable insight about how AI models work and how to use them more effectively. Here is my consolidated understanding from each exercise.</p>
+
+        <!-- Part 1 -->
+        <p style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">
+          <span class="pill pill-part">PART 1</span> How AI Knows Things
+        </p>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-teal">1</div>
+            <div>
+              <div class="card-title">Novice vs. Power User — Context Changes Everything</div>
+              <div class="card-subtitle">Exercise 1 · 6 minutes</div>
+            </div>
+          </div>
+          <p>The most immediate lesson in the lab: a bare question like <em>"Which phone should I buy?"</em> yields a generic answer useful to nobody, while a fully briefed prompt with budget, use case, constraints, and desired output format produces a genuinely personalized, actionable answer. This exercise made concrete what I had only sensed before — AI is not psychic. It responds to what it receives, nothing more. The gap in quality between the two prompts was dramatic and immediately visible.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> I now treat every AI prompt the way I would brief a smart but brand-new colleague — I assume they know nothing about me and front-load all relevant facts.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-teal">2</div>
+            <div>
+              <div class="card-title">Knows vs. Guesses — Confident ≠ Correct</div>
+              <div class="card-subtitle">Exercise 2 · 5 minutes</div>
+            </div>
+          </div>
+          <p>This exercise was a genuine wake-up call. AI models produce fluent, confident-sounding prose whether they have solid knowledge or are quietly extrapolating. Asking about stable scientific facts (why onions make you cry) yields reliable answers, but asking about local current events or jurisdiction-specific legal thresholds exposes the model's blind spots. The key skill I developed: asking myself <em>"How would the AI even know this?"</em> before trusting any answer. For recent, local, or private data, I now explicitly instruct the model to search or to clearly mark its uncertainty.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Never mistake fluency for accuracy. The model's confidence in its tone is not evidence of correctness.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-teal">3</div>
+            <div>
+              <div class="card-title">The 3 Retrieval Modes — Wording Picks the Mode</div>
+              <div class="card-subtitle">Exercise 3 · 8 minutes</div>
+            </div>
+          </div>
+          <p>I learned that I do not click a "research mode" button — my wording implicitly selects the retrieval mode. Stable knowledge (Romeo and Juliet's plot) comes from training data instantly. Time-sensitive queries with words like <em>"today," "this week," "latest," "my city"</em> trigger web search. Requests with <em>"research thoroughly," "cite sources," "structured report," "government sites only"</em> steer toward deep research mode. Understanding these trigger-word patterns lets me consciously steer the AI rather than accepting whatever mode it defaults to.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Asking for citations is not just good academic practice — it forces the AI to operate in web-search or research mode and keeps its answers honest.</div>
+        </div>
+
+        <!-- Part 2 -->
+        <p style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;">
+          <span class="pill pill-part">PART 2</span> Talking to AI Well
+        </p>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-orange">4</div>
+            <div>
+              <div class="card-title">Context Is Everything — Brief It Like a Colleague</div>
+              <div class="card-subtitle">Exercise 4 · 6 minutes</div>
+            </div>
+          </div>
+          <p>Exercise 4 gave me a reusable template that I have since applied to nearly every prompt: <em>Task → Constraints → Audience → Desired output format.</em> Five lines of good context beats five paragraphs of clever wording. The dinner-planning and team-update examples demonstrated this vividly — the constraint "one person doesn't eat spicy food" completely changed the meal suggestions. The template removes ambiguity and eliminates the need for follow-up clarification rounds.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> The moment a topic changes, start a fresh chat. Accumulated wrong context is as harmful as no context.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-orange">5</div>
+            <div>
+              <div class="card-title">Think Hard — Invoke Reasoning Mode for Complex Decisions</div>
+              <div class="card-subtitle">Exercise 5 · 6 minutes</div>
+            </div>
+          </div>
+          <p>Adding the phrase <em>"Think hard before answering"</em> and then asking for structured output (trade-offs, recommendation, and the conditions under which the recommendation flips) produced noticeably richer, more nuanced responses. The job-offer comparison was the most striking example — without the instruction, I got a list of generic pros and cons; with it, I got a reasoned analysis explicitly tied to my stated values (learning and family time). I learned to save this mode for genuine multi-variable decisions, not trivial lookups.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Structured output requests (numbered sub-questions) do as much work as "think hard" itself — they prevent the AI from giving vague prose instead of a real answer.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-orange">6</div>
+            <div>
+              <div class="card-title">Stop the Flattery — Sycophancy and How to Avoid It</div>
+              <div class="card-subtitle">Exercise 6 · 6 minutes</div>
+            </div>
+          </div>
+          <p>This was one of the most eye-opening exercises. Loaded questions like <em>"Don't you think mornings are obviously the best time to exercise?"</em> implicitly hand the AI my preferred answer, and it tends to confirm it. Switching to neutral verbs — <em>compare, evaluate, list both sides</em> — produced balanced analyses that sometimes challenged my prior assumptions. The lab noted that newer models now resist obvious leading prompts, but the principle still holds: the quality of the AI's reasoning depends directly on how you structure your question.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> If I want an honest analysis, I must strip my own opinion from the question. The AI reflects what I imply.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-orange">7</div>
+            <div>
+              <div class="card-title">The Brainstorm–Iterate Loop — The Highest-Leverage Habit</div>
+              <div class="card-subtitle">Exercise 7 · 8 minutes</div>
+            </div>
+          </div>
+          <p>This exercise reshaped how I think about using AI: the value is not in the first answer — it is in the loop. Round 1 gets options; Round 2 applies feedback to generate better options; Round 3 expands and refines the winner. What I ended up with after three rounds was dramatically better than anything in Round 1. The key mechanics are: ask for five options (not one), give specific feedback ("I like option 3 but want it more concise"), and keep iterating until you have something you would actually use.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Treating any AI output as a first draft rather than a final answer is the single most impactful mental shift in this lab.</div>
+        </div>
+
+        <!-- Part 3 -->
+        <p style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;">
+          <span class="pill pill-part">PART 3</span> Beyond Text
+        </p>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-purple">8</div>
+            <div>
+              <div class="card-title">Multimodal — Image & Audio</div>
+              <div class="card-subtitle">Exercise 8 · 7 minutes</div>
+            </div>
+          </div>
+          <p>Handing the AI a photo of handwritten text, a receipt, or a whiteboard and asking it to transcribe, structure, and flag uncertain readings showed me that AI handles the tedious 90% of visual-to-text work well, but the final 10% — checking totals, verifying flagged words — still requires human attention. The bonus prompt (asking AI to write an image-generation prompt for another tool) demonstrated the "AI writing prompts for AI" workflow, which compounds creative output significantly.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> AI is great at the gist but weak on fine numerical detail. Always verify totals and anything it flags as unclear.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-purple">9</div>
+            <div>
+              <div class="card-title">Build a Small App — Goal / Input / Output Briefing</div>
+              <div class="card-subtitle">Exercise 9 · 8 minutes</div>
+            </div>
+          </div>
+          <p>I discovered that non-coders can build functional single-screen tools — tip calculators, countdown timers — by writing a clear three-slot brief: <em>Goal</em> (what it does), <em>Input</em> (what the user provides), <em>Output</em> (what they see). The iteration step — "make the buttons bigger, change to calm blue, add a reset button" — proved that you can refine a working app in plain English. The skill here is not coding; it is writing a precise specification and knowing how to iterate.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Anyone who can write a clear brief can now build simple tools. The limiting factor has shifted from technical skill to clarity of thought.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-purple">10</div>
+            <div>
+              <div class="card-title">Data Analysis — Expose the Silent Failure Mode</div>
+              <div class="card-subtitle">Exercise 10 · 10 minutes</div>
+            </div>
+          </div>
+          <p>This exercise revealed a critical hidden risk: if you don't explicitly ask the AI to write and run code, it may produce plausible-looking numbers that are actually calculated by pattern-matching rather than real computation. The fix is always to say <em>"write and run code, show me the code."</em> No code block in the response means it probably guessed. I compared Round 1 (no code instruction) to Round 2 (code required) and saw the difference clearly: Round 2 produced verifiable, correct results; Round 1 produced fluent-sounding numbers that could have been wrong with no way to tell.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> The silent failure mode is the most dangerous one — confident wrong answers that look exactly like confident right answers.</div>
+        </div>
+
+        <!-- Part 4 -->
+        <p style="font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin:24px 0 12px;">
+          <span class="pill pill-part">PART 4</span> Working Safely & Choosing Tools
+        </p>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-green">11</div>
+            <div>
+              <div class="card-title">Desktop Apps & Permissions — Plan, Don't Act</div>
+              <div class="card-subtitle">Exercise 11 · 5 minutes</div>
+            </div>
+          </div>
+          <p>The "plan, don't act" habit is essential when AI agents have real file-system access. The safe order: tell the task → ask for a plan → review and edit → only then approve. The lab reinforced that deleted files often skip the recycle bin and edits overwrite, so irreversible actions must be reviewed before execution. I internalized the principle of scoping permissions tightly and expanding them only as track record is established — not based on brand trust.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> The more powerful an AI agent's permissions, the more important it is to review its plan before letting it execute.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-green">12</div>
+            <div>
+              <div class="card-title">Which Model When — AI Performance Is Jagged</div>
+              <div class="card-subtitle">Exercise 12 · 8 minutes</div>
+            </div>
+          </div>
+          <p>Running the same prompt in two different AI tools (e.g., Claude and ChatGPT) made it immediately visible that no single model is universally best. Performance is "jagged" — one model may write a better LinkedIn post while another produces a more nuanced day plan. The practical lesson: keep two tools available and re-test monthly, because performance rankings shift as models are updated. This exercise also showed me that model choice is a prompting decision, not a one-time setup decision.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Two open tabs with different AI models is a simple, free quality-control strategy that dramatically improves output reliability.</div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-green">13</div>
+            <div>
+              <div class="card-title">Models Checking Models — Cross-Family Verification</div>
+              <div class="card-subtitle">Exercise 13 · 10 minutes</div>
+            </div>
+          </div>
+          <p>The final exercise introduced a powerful quality-control technique: having one AI model critically evaluate the output of another, using a structured scoring rubric (1–10 on clarity, structure, evidence, and gaps). Different model families have different blind spots — a point one misses, the other often catches. This method is most valuable for high-stakes work where being wrong is expensive: legal drafts, client-facing documents, published content.</p>
+          <div class="takeaway"><strong>Personal insight:</strong> Cross-model grading is the AI equivalent of having a second expert reviewer — and it costs nothing extra.</div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ─── SECTION 2: IMPROVEMENT ─── -->
+      <section class="section" id="improvement">
+        <div class="section-badge">📈 Progression</div>
+        <h2>How My Prompting Improved During the Process</h2>
+        <p class="section-intro">My approach to writing prompts changed noticeably across the four parts of the lab. Here is an honest account of where I started and where I ended up.</p>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-teal">→</div>
+            <div>
+              <div class="card-title">Before the Lab: The Novice Pattern</div>
+            </div>
+          </div>
+          <p>Before starting the lab, my typical prompt looked like: <em>"How do I write a good email?"</em> or <em>"Give me some ideas for a project."</em> I treated AI like a search engine — I typed a topic and hoped the response would magically apply to my situation. I accepted the first answer as the final answer and rarely iterated. I had no awareness of hallucination risk, retrieval modes, or sycophancy.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-orange">→</div>
+            <div>
+              <div class="card-title">After Part 1 & 2: Context-First Thinking</div>
+            </div>
+          </div>
+          <p>After Exercises 1–7, my prompts acquired a consistent shape: task description, then context bullet points, then explicit output format. I started asking "How would the AI even know this?" before trusting any answer. I began using neutral verbs (compare, evaluate) instead of leading questions. And I stopped treating the first response as anything other than a starting draft for an iterative conversation.</p>
+          <div class="progress-row">
+            <div class="progress-label">Context quality</div>
+            <div class="progress-track"><div class="progress-fill" style="width:85%"></div></div>
+            <div class="progress-pct">85%</div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label">Output format clarity</div>
+            <div class="progress-track"><div class="progress-fill" style="width:80%"></div></div>
+            <div class="progress-pct">80%</div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label">Iteration habit</div>
+            <div class="progress-track"><div class="progress-fill" style="width:70%"></div></div>
+            <div class="progress-pct">70%</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-purple">→</div>
+            <div>
+              <div class="card-title">After Part 3: Multimodal and Technical Awareness</div>
+            </div>
+          </div>
+          <p>Exercises 8–10 added three new dimensions to my prompting practice. First, I learned to work with non-text inputs and to write effective multi-modal prompts that specify transcription format, flagging behavior, and confidence marking. Second, I adopted the Goal/Input/Output brief for any tool-building request. Third, I learned to always demand code execution for numerical tasks — a habit that eliminates the silent failure mode entirely.</p>
+          <div class="progress-row">
+            <div class="progress-label">Multimodal prompting</div>
+            <div class="progress-track"><div class="progress-fill" style="width:72%"></div></div>
+            <div class="progress-pct">72%</div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label">Data analysis safety</div>
+            <div class="progress-track"><div class="progress-fill" style="width:90%"></div></div>
+            <div class="progress-pct">90%</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-number n-green">→</div>
+            <div>
+              <div class="card-title">After Part 4: Systems Thinking About AI Tools</div>
+            </div>
+          </div>
+          <p>The final three exercises shifted my view from individual prompts to AI as a system. I now think about: which model is best for this task type? Have I let the AI act without reviewing its plan? Is this output worth cross-checking with a second model? These are meta-level questions that make every individual prompt more effective by ensuring the right tool is used in the right way.</p>
+          <div class="progress-row">
+            <div class="progress-label">Model selection judgment</div>
+            <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+            <div class="progress-pct">75%</div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label">Safety habits (plan before act)</div>
+            <div class="progress-track"><div class="progress-fill" style="width:88%"></div></div>
+            <div class="progress-pct">88%</div>
+          </div>
+          <div class="progress-row">
+            <div class="progress-label">Cross-model verification</div>
+            <div class="progress-track"><div class="progress-fill" style="width:65%"></div></div>
+            <div class="progress-pct">65%</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ─── SECTION 3: TECHNIQUES ─── -->
+      <section class="section" id="techniques">
+        <div class="section-badge">⭐ Most Effective</div>
+        <h2>Prompting Techniques That Helped the Most</h2>
+        <p class="section-intro">Of all the techniques practiced, five stood out as having the highest immediate impact on output quality. They are ranked here by practical leverage.</p>
+
+        <div class="grid-2">
+
+          <div class="technique-card">
+            <span class="rank-badge">#1 Most Impactful</span>
+            <h3>The Brainstorm–Iterate Loop</h3>
+            <p>Asking for five options instead of one, giving structured feedback on what I liked and didn't, then expanding the winner across three rounds. This single habit produced outputs that were dramatically better than any first-attempt response. The core insight: the first answer is a draft, not a result.</p>
+          </div>
+
+          <div class="technique-card orange">
+            <span class="rank-badge orange">#2 Highest Return</span>
+            <h3>Context-First Briefing (Task + Facts + Format)</h3>
+            <p>The structured template from Exercise 4 — state the task, list factual constraints as bullets, specify the exact desired output — consistently transformed generic AI responses into precise, usable ones. This template is now my default starting point for any non-trivial prompt.</p>
+          </div>
+
+          <div class="technique-card purple">
+            <span class="rank-badge purple">#3 Safety-Critical</span>
+            <h3>Forcing Code Execution for Numerical Tasks</h3>
+            <p>Always saying "write and run code, show me the code" when numbers are involved. This eliminates the silent failure mode — where the AI produces fluent but potentially wrong calculations — and provides a verifiable audit trail for any quantitative result.</p>
+          </div>
+
+          <div class="technique-card green">
+            <span class="rank-badge green">#4 Decision Quality</span>
+            <h3>"Think Hard" + Structured Sub-Questions</h3>
+            <p>Combining "think hard before answering" with a numbered output structure (trade-offs, recommendation, conditions where the recommendation flips) reliably produces deeper reasoning on complex decisions. Without structure, even the "think hard" prompt can yield vague prose.</p>
+          </div>
+
+          <div class="technique-card red" style="grid-column: span 2;">
+            <span class="rank-badge red">#5 Quality Control</span>
+            <h3>Cross-Model Verification (Models Checking Models)</h3>
+            <p>Using a second AI model from a different family to score the same draft (1–10 on clarity, structure, evidence, gaps) catches blind spots that the first model missed. This technique is most powerful for high-stakes content — anything that would be costly if wrong. It costs nothing extra and provides an objective quality signal that is hard to get any other way.</p>
+          </div>
+
+        </div>
+
+        <div style="margin-top:24px;">
+          <div class="card">
+            <p><strong>Honorable mentions:</strong> Neutral framing (using "compare/evaluate" instead of loaded verbs like "confirm/prove") consistently produced more balanced and useful analytical outputs — especially for any topic where I had a prior opinion I might have wanted validated. The three retrieval modes (memory / web / research) also proved highly useful once I understood how trigger words implicitly activate each mode.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+          <table class="summary-table">
+            <thead>
+              <tr>
+                <th>Technique</th>
+                <th>Exercise</th>
+                <th>When to Use</th>
+                <th>Impact Area</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="dot dot-teal"></span>Brainstorm–Iterate Loop</td>
+                <td>Ex. 7</td>
+                <td>Any creative or decision-making task</td>
+                <td>Output quality</td>
+              </tr>
+              <tr>
+                <td><span class="dot dot-orange"></span>Context-First Briefing</td>
+                <td>Ex. 4</td>
+                <td>Every non-trivial prompt</td>
+                <td>Relevance & precision</td>
+              </tr>
+              <tr>
+                <td><span class="dot dot-purple"></span>Force Code Execution</td>
+                <td>Ex. 10</td>
+                <td>Any numerical / data task</td>
+                <td>Accuracy & trust</td>
+              </tr>
+              <tr>
+                <td><span class="dot dot-teal"></span>Think Hard + Structure</td>
+                <td>Ex. 5</td>
+                <td>Multi-variable decisions</td>
+                <td>Depth of reasoning</td>
+              </tr>
+              <tr>
+                <td><span class="dot dot-green"></span>Cross-Model Grading</td>
+                <td>Ex. 13</td>
+                <td>High-stakes outputs</td>
+                <td>Quality assurance</td>
+              </tr>
+              <tr>
+                <td><span class="dot dot-orange"></span>Neutral Framing</td>
+                <td>Ex. 6</td>
+                <td>Analysis, comparisons, decisions</td>
+                <td>Objectivity</td>
+              </tr>
+              <tr>
+                <td><span class="dot dot-purple"></span>Retrieval Mode Steering</td>
+                <td>Ex. 3</td>
+                <td>Any query needing current facts</td>
+                <td>Information freshness</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ─── SECTION 4: CHALLENGES ─── -->
+      <section class="section" id="challenges">
+        <div class="section-badge">🧩 Challenges</div>
+        <h2>Challenges Faced & How I Solved Them</h2>
+        <p class="section-intro">The lab was designed to expose real difficulties, not just teach happy-path usage. Here are the most significant challenges I encountered and the strategies I used to work through them.</p>
+
+        <div class="challenge-card">
+          <div class="challenge-top">
+            <span class="challenge-icon">⚠️</span>
+            <span class="challenge-title">Challenge 1: AI Sounding Confident When It Was Wrong</span>
+          </div>
+          <div class="challenge-body">
+            <p>In Exercise 2, the AI gave equally confident-sounding answers for both things it knew well (chemistry of onions) and things it could not possibly know for certain (local legal thresholds, today's headlines). There was no tone difference, no hesitation — making it difficult to know when to trust the output. This was the most unsettling discovery of the lab because it meant I had been over-trusting AI outputs for months.</p>
+          </div>
+          <div class="solution-strip">
+            <strong>Solution:</strong> I now apply a simple filter before trusting any answer: "Is this recent, local, or private?" If yes to any of those, I explicitly instruct the AI to search for current information or to mark its uncertainty — and I verify independently. For stable facts, I trust more freely.
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-top">
+            <span class="challenge-icon">🔄</span>
+            <span class="challenge-title">Challenge 2: Breaking the Habit of Accepting the First Answer</span>
+          </div>
+          <div class="challenge-body">
+            <p>Before the lab, my instinct was to read the AI's first response, decide whether it was "good enough," and either use it or rephrase my question from scratch. The Brainstorm–Iterate Loop (Exercise 7) exposed how much value I was leaving on the table by not feeding structured feedback back into the conversation. Changing this habit took conscious effort — the temptation to settle for "good enough" is strong when you're under time pressure.</p>
+          </div>
+          <div class="solution-strip">
+            <strong>Solution:</strong> I adopted a two-question rule: after any first AI response, I must ask myself (1) "Did I ask for multiple options?" and (2) "Have I given specific feedback yet?" If the answer to either is no, I run another round before accepting the output.
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-top">
+            <span class="challenge-icon">🔢</span>
+            <span class="challenge-title">Challenge 3: Detecting the Silent Failure Mode in Data Analysis</span>
+          </div>
+          <div class="challenge-body">
+            <p>Exercise 10 set a trap: ask for statistical analysis without mentioning code, and the AI produces fluent, plausible numbers — which might be incorrect. The danger is that there is no visible difference between a computed answer and a pattern-matched guess; both look like paragraph text with numbers in them. Without knowing to look for a code block, I would never have caught the potential error.</p>
+          </div>
+          <div class="solution-strip">
+            <strong>Solution:</strong> I added a standing rule to my prompting practice: any prompt involving numbers, statistics, or data must include the phrase "write and run code, show me the code." The presence of a code block in the response confirms real computation; its absence is a red flag.
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-top">
+            <span class="challenge-icon">🤖</span>
+            <span class="challenge-title">Challenge 4: Understanding That Wording Selects the Retrieval Mode</span>
+          </div>
+          <div class="challenge-body">
+            <p>Exercise 3 revealed that I had been unknowingly toggling between memory, web-search, and deep-research modes based on my wording — without realizing I was doing it. This meant that sometimes I was getting stale training-data answers when I needed fresh web results, and vice versa. The mechanism is invisible unless you know to look for it.</p>
+          </div>
+          <div class="solution-strip">
+            <strong>Solution:</strong> I memorized three sets of trigger words. For memory: general, stable knowledge topics with no time markers. For web: "today," "this week," "latest," "current," "cite it." For research: "research thoroughly," "structured report," "cite sources," "reputable sources only." I now consciously choose which set to use based on the type of answer I need.
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-top">
+            <span class="challenge-icon">🎨</span>
+            <span class="challenge-title">Challenge 5: Writing Effective Goal/Input/Output Briefs for App Building</span>
+          </div>
+          <div class="challenge-body">
+            <p>Exercise 9's app-building exercise exposed a gap in how I specify what I want. My first draft brief was vague about the output: I said "make a tip calculator" without specifying what numbers should appear, what the layout should look like, or what inputs were needed. The resulting app worked but looked nothing like what I had in mind, requiring more iteration rounds than would have been necessary with a precise brief.</p>
+          </div>
+          <div class="solution-strip">
+            <strong>Solution:</strong> I now always fill all three slots explicitly: Goal (what the tool accomplishes in one sentence), Input (exactly what the user types or selects), Output (exactly what appears on screen). Even adding one more sentence of specificity to the Output slot cut iteration rounds significantly.
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-top">
+            <span class="challenge-icon">🔒</span>
+            <span class="challenge-title">Challenge 6: Developing Instincts for Safe AI Agent Permissions</span>
+          </div>
+          <div class="challenge-body">
+            <p>Exercise 11's discussion of desktop AI apps and file permissions surfaced a challenge I had not fully confronted: knowing which permissions are safe to grant. The instinct to say "yes" to everything to make the AI more capable is understandable — but dangerous. Deleted files skip the recycle bin; overwritten edits are irreversible. The "plan, don't act" habit felt artificial at first but became obviously correct after thinking through the failure scenarios.</p>
+          </div>
+          <div class="solution-strip">
+            <strong>Solution:</strong> I committed to the four-step safe order: (1) tell the task, (2) ask for a plan, (3) review and edit, (4) only then approve. For any AI agent with real file access, I now start with the minimum necessary permissions and expand them only after verifying the agent's behavior on low-stakes tasks first.
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ─── CONCLUSION ─── -->
+      <section class="section" id="conclusion">
+        <div class="conclusion">
+          <h2>Conclusion</h2>
+          <p>The AI Prompting Lab is one of the most practically valuable exercises I have completed in my study of AI tools. Its central rule — <em>"Get the right context in, keep the wrong context out"</em> — turned out not to be a simplification but a genuinely complete framework. Every one of the 13 exercises is a specific application of this principle in a different domain: context in conversation, context about AI's knowledge limits, context about retrieval mode, context about output format, and context about tool safety.</p>
+          <p>The technique I will carry forward most consistently is the Brainstorm–Iterate Loop, because it fundamentally changes the relationship with the AI from a one-shot query tool to a collaborative refining partner. Close behind it is context-first briefing, because it eliminates the single biggest reason AI outputs are generic and unhelpful.</p>
+          <p>The safety lessons from Part 4 — knowing when AI knows vs. guesses, demanding code for numerical tasks, cross-checking with a second model, and reviewing plans before approving actions — are the most important for high-stakes professional use. They are the difference between AI as a useful accelerator and AI as a source of costly mistakes.</p>
+          <p>I now approach every AI interaction as a conversation with a capable but context-blind collaborator — one that responds precisely and powerfully to what it is given, and can do nothing useful with what it is not told.</p>
+        </div>
+      </section>
+
+    </div><!-- /content -->
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>AI Prompting Lab — Assignment Feedback</span> &nbsp;·&nbsp;
+      <span>Saad Mehmood</span> &nbsp;·&nbsp;
+      <span>Panaversity · Project 1 · June 2026</span>
+    </footer>
+
+  </main>
+</div>
+
+<!-- Scroll to top -->
+<button id="scroll-top" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Show scroll-to-top button
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scroll-top');
+    if (window.scrollY > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // Highlight active sidebar link
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.sidebar nav a');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.sidebar nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

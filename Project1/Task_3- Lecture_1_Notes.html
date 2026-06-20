@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lecture 1 Notes — Agentic AI & Agent Factory</title>
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter", sans-serif;
+    background: #f8f9fa;
+    color: #1a1a2e;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── Layout ── */
+  .layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 270px;
+    min-width: 270px;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 28px 0 40px;
+  }
+  .sidebar-header {
+    padding: 0 22px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 16px;
+  }
+  .sidebar-header .label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 4px;
+  }
+  .sidebar-header h2 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #334155;
+    line-height: 1.4;
+  }
+  .toc { padding: 0 12px; }
+  .toc-section { margin-bottom: 6px; }
+  .toc-section-title {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    padding: 8px 10px 4px;
+  }
+  .toc a {
+    display: block;
+    padding: 5px 10px;
+    font-size: 13px;
+    color: #475569;
+    text-decoration: none;
+    border-radius: 6px;
+    line-height: 1.4;
+    transition: background .15s, color .15s;
+  }
+  .toc a:hover {
+    background: #f1f5f9;
+    color: #2563eb;
+  }
+  .toc a.active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  /* ── Main content ── */
+  main {
+    flex: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ── Hero Header ── */
+  .hero {
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 60%, #3b82f6 100%);
+    border-radius: 16px;
+    padding: 40px 44px;
+    color: #fff;
+    margin-bottom: 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 20px;
+    padding: 3px 14px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.3;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .hero .summary {
+    font-size: 14.5px;
+    line-height: 1.75;
+    opacity: .88;
+    max-width: 640px;
+    position: relative;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 20px;
+    margin-top: 22px;
+    position: relative;
+    flex-wrap: wrap;
+  }
+  .hero-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    opacity: .8;
+  }
+  .hero-meta .dot {
+    width: 6px; height: 6px;
+    background: rgba(255,255,255,.5);
+    border-radius: 50%;
+  }
+
+  /* ── Instructors ── */
+  .instructors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-top: 0;
+  }
+  .instructor-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .av-blue  { background: linear-gradient(135deg,#2563eb,#3b82f6); }
+  .av-teal  { background: linear-gradient(135deg,#0f766e,#14b8a6); }
+  .av-violet{ background: linear-gradient(135deg,#7c3aed,#a78bfa); }
+  .instructor-info h4 { font-size: 14px; font-weight: 700; color: #1e293b; }
+  .instructor-info p  { font-size: 12.5px; color: #64748b; margin-top: 3px; }
+
+  /* ── Section headings ── */
+  .section { margin-bottom: 44px; }
+  .section-anchor { display: block; position: relative; top: -80px; visibility: hidden; }
+
+  h2.sec-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  h2.sec-title .icon {
+    width: 30px; height: 30px;
+    background: #eff6ff;
+    border-radius: 8px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 15px;
+  }
+
+  h3.sub-title {
+    font-size: 15.5px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 22px 0 10px;
+  }
+
+  /* ── Cards ── */
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  }
+  .card h4 {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card h4 .badge {
+    font-size: 10.5px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: .04em;
+  }
+  .badge-blue   { background: #dbeafe; color: #1d4ed8; }
+  .badge-green  { background: #dcfce7; color: #15803d; }
+  .badge-purple { background: #ede9fe; color: #6d28d9; }
+  .badge-orange { background: #ffedd5; color: #c2410c; }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 18px 0;
+    border-left: 4px solid;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .callout-icon { font-size: 18px; margin-top: 1px; flex-shrink: 0; }
+  .callout-body { flex: 1; }
+  .callout-body strong { display: block; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .callout-body p, .callout-body ul { font-size: 13.5px; }
+
+  .callout.key    { background: #eff6ff; border-color: #3b82f6; }
+  .callout.key    .callout-body strong { color: #1d4ed8; }
+
+  .callout.def    { background: #fefce8; border-color: #eab308; }
+  .callout.def    .callout-body strong { color: #854d0e; }
+
+  .callout.warn   { background: #fff7ed; border-color: #f97316; }
+  .callout.warn   .callout-body strong { color: #c2410c; }
+
+  .callout.tip    { background: #f0fdf4; border-color: #22c55e; }
+  .callout.tip    .callout-body strong { color: #15803d; }
+
+  .callout.insight{ background: #faf5ff; border-color: #a855f7; }
+  .callout.insight .callout-body strong { color: #6d28d9; }
+
+  /* ── Lists ── */
+  ul.clean, ol.clean { padding-left: 22px; }
+  ul.clean li, ol.clean li { margin-bottom: 7px; font-size: 14px; color: #334155; }
+  ul.clean li::marker { color: #3b82f6; }
+
+  /* ── Level grid ── */
+  .levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .level-card {
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .level-card.l1 { background: #f0fdf4; border: 1px solid #bbf7d0; }
+  .level-card.l2 { background: #eff6ff; border: 1px solid #bfdbfe; }
+  .level-card.l3 { background: #faf5ff; border: 1px solid #ddd6fe; }
+  .level-num {
+    font-size: 38px;
+    font-weight: 900;
+    opacity: .12;
+    position: absolute;
+    top: 6px; right: 14px;
+    line-height: 1;
+  }
+  .level-card h4 { font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+  .level-card.l1 h4 { color: #15803d; }
+  .level-card.l2 h4 { color: #1d4ed8; }
+  .level-card.l3 h4 { color: #6d28d9; }
+  .level-card p  { font-size: 13px; color: #475569; line-height: 1.6; }
+  .level-card ul { padding-left: 16px; margin-top: 8px; }
+  .level-card ul li { font-size: 12.5px; color: #475569; margin-bottom: 4px; }
+
+  /* ── Comparison table ── */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    border: 1px solid #e2e8f0;
+  }
+  .compare-table th {
+    background: #1e3a8a;
+    color: #fff;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .04em;
+  }
+  .compare-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:nth-child(even) td { background: #f8fafc; }
+
+  /* ── Rule cards ── */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .rule-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px 20px;
+    position: relative;
+  }
+  .rule-num {
+    font-size: 13px;
+    font-weight: 800;
+    color: #2563eb;
+    background: #eff6ff;
+    border-radius: 6px;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .rule-card h4 { font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 7px; }
+  .rule-card p  { font-size: 13px; color: #475569; line-height: 1.6; }
+
+  /* ── Flow diagram (text-based) ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+  .flow-step {
+    text-align: center;
+    padding: 12px 18px;
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 10px;
+    min-width: 110px;
+  }
+  .flow-step .step-num { font-size: 10px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: .08em; }
+  .flow-step .step-label { font-size: 12.5px; font-weight: 700; color: #1e3a8a; margin-top: 3px; }
+  .flow-step .step-note  { font-size: 11px; color: #64748b; margin-top: 3px; }
+  .flow-arrow { font-size: 20px; color: #94a3b8; padding: 0 8px; flex-shrink: 0; }
+
+  /* ── 10-80-10 bar ── */
+  .rule-bar {
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 52px;
+    margin: 16px 0;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 1px 4px rgba(0,0,0,.1);
+  }
+  .rule-bar .seg {
+    display: flex; align-items: center; justify-content: center;
+    text-align: center; line-height: 1.3;
+    color: #fff;
+    padding: 4px;
+  }
+  .rule-bar .s10a { background: #1d4ed8; width: 10%; min-width: 80px; font-size: 12px; }
+  .rule-bar .s80  { background: #7c3aed; flex: 1; }
+  .rule-bar .s10b { background: #0f766e; width: 10%; min-width: 80px; font-size: 12px; }
+
+  /* ── Code block ── */
+  .code-block {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-family: "SF Mono", "Fira Code", "Courier New", monospace;
+    font-size: 13px;
+    color: #e2e8f0;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 14px 0;
+    border: 1px solid #1e293b;
+  }
+  .code-block .cm  { color: #64748b; }
+  .code-block .kw  { color: #93c5fd; }
+  .code-block .str { color: #86efac; }
+  .code-block .fn  { color: #fbbf24; }
+  .code-block .num { color: #f9a8d4; }
+
+  /* ── Vocab table ── */
+  .vocab-grid {
+    display: grid;
+    gap: 10px;
+  }
+  .vocab-item {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+  .vocab-term {
+    font-size: 13px;
+    font-weight: 800;
+    color: #1d4ed8;
+    background: #eff6ff;
+    border-radius: 6px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .vocab-def { font-size: 13.5px; color: #475569; line-height: 1.55; }
+
+  /* ── Tag chips ── */
+  .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+  .tag {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+  }
+
+  /* ── Homework box ── */
+  .homework {
+    background: linear-gradient(135deg, #fefce8, #fffbeb);
+    border: 1.5px solid #fde68a;
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin-top: 12px;
+  }
+  .homework h4 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #92400e;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .homework ul { padding-left: 20px; }
+  .homework ul li { font-size: 13.5px; color: #78350f; margin-bottom: 7px; }
+
+  /* ── Responsiveness ── */
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    main { padding: 28px 20px 60px; }
+    .hero { padding: 28px 24px; }
+    .hero h1 { font-size: 20px; }
+    .flow { flex-direction: column; align-items: flex-start; }
+  }
+
+  p { margin-bottom: 10px; color: #334155; font-size: 14px; }
+  strong { color: #1e293b; }
+  em { color: #64748b; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ───── Sidebar ───── -->
+  <nav class="sidebar" aria-label="Table of contents">
+    <div class="sidebar-header">
+      <div class="label">Course Notes</div>
+      <h2>Agentic AI — Lecture 1</h2>
+    </div>
+    <div class="toc">
+      <div class="toc-section">
+        <span class="toc-section-title">Getting Started</span>
+        <a href="#intro">Introduction & Team</a>
+        <a href="#vision">Course Vision & Goals</a>
+      </div>
+      <div class="toc-section">
+        <span class="toc-section-title">Core Concepts</span>
+        <a href="#what-is-ai">What is AI?</a>
+        <a href="#three-levels">Three Levels of AI</a>
+        <a href="#agentic-ai">Agentic AI Deep Dive</a>
+        <a href="#generative-vs-agentic">Generative vs Agentic</a>
+      </div>
+      <div class="toc-section">
+        <span class="toc-section-title">Architecture</span>
+        <a href="#tool-vs-worker">AI as Tool vs Worker</a>
+        <a href="#agent-factory">The Agent Factory</a>
+        <a href="#ai-native-company">AI-Native Company</a>
+        <a href="#ten-eighty-ten">The 10-80-10 Rule</a>
+        <a href="#identic-ai">Identic AI / Delegate</a>
+        <a href="#two-modes">Two Modes of Using AI</a>
+      </div>
+      <div class="toc-section">
+        <span class="toc-section-title">Building</span>
+        <a href="#seven-rules">7 Golden Rules</a>
+        <a href="#vocab">Key Vocabulary</a>
+        <a href="#homework">Homework</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ───── Main ───── -->
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-tag">Panaversity · Agentic AI Course · 101-P11</div>
+      <h1>Introduction to Agentic AI &amp; the Agent Factory</h1>
+      <p class="summary">
+        This first lecture establishes the foundational philosophy of the course: understanding the three evolutionary levels of AI, why "Agentic AI" is the paradigm shift that matters today, and how the <strong>Agent Factory</strong> model lets anyone build, train, and deploy AI workers that handle entire workflows end-to-end — freeing humans to direct, verify, and own outcomes rather than execute routine tasks.
+      </p>
+      <div class="hero-meta">
+        <span><span class="dot"></span> Lecture 1 of the Course</span>
+        <span><span class="dot"></span> ~2 hours</span>
+        <span><span class="dot"></span> Translated from Hindi/Urdu</span>
+      </div>
+    </div>
+
+    <!-- ── Section 1: Introduction ── -->
+    <div class="section">
+      <span class="section-anchor" id="intro"></span>
+      <h2 class="sec-title"><span class="icon">👥</span> Introduction &amp; Faculty</h2>
+
+      <div class="instructors-grid">
+        <div class="instructor-card">
+          <div class="avatar av-blue">Z</div>
+          <div class="instructor-info">
+            <h4>Zia Khan</h4>
+            <p>Lead Instructor &amp; Founder<br>5 US degrees (MBA, MAcc, MIS, MS Engineering, CPA/CMA). Left the US to build a tech revolution in Pakistan. Co-founded Panaversity.</p>
+          </div>
+        </div>
+        <div class="instructor-card">
+          <div class="avatar av-teal">B</div>
+          <div class="instructor-info">
+            <h4>Bania Kazmi</h4>
+            <p>Faculty · Software Engineering (COMSATS)<br>Completed 50 Python programs overnight on day one — earned her faculty spot instantly. Leads the Agentic AI book project.</p>
+          </div>
+        </div>
+        <div class="instructor-card">
+          <div class="avatar av-violet">A</div>
+          <div class="instructor-info">
+            <h4>Amar Amir</h4>
+            <p>Faculty · BBA + Self-taught AI<br>Started with web development, pivoted to Agentic AI. Co-leads Panaversity &amp; the book authorship.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout tip" style="margin-top:18px;">
+        <span class="callout-icon">📖</span>
+        <div class="callout-body">
+          <strong>The Book: "Agent Factory"</strong>
+          <p>The team is authoring what they aim to be the world's leading open book on Agentic AI. The URL is shared in the course portal. You can paste it into ChatGPT, Claude, or Gemini and ask: <em>"What is the ranking of this book compared to others on the subject?"</em></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 2: Vision ── -->
+    <div class="section">
+      <span class="section-anchor" id="vision"></span>
+      <h2 class="sec-title"><span class="icon">🎯</span> Course Vision &amp; Goals</h2>
+
+      <p>Zia Khan was clear from the start — this is not just a class, it is a mission to produce <strong>world-class entrepreneurs, startup founders, and globally competitive professionals</strong> from Pakistan.</p>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>The Mediocrity Warning</strong>
+          <p>"The era of being average is over. In the AI world, a mediocre person will struggle to survive. You must become a star." — Zia Khan. The course's core promise is to shift your mindset from employee-think to founder-think.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Two Things Required for Success</h3>
+      <ul class="clean">
+        <li><strong>Do the assigned work</strong> — complete every task given by instructors without postponing. "Tomorrow never comes."</li>
+        <li><strong>Build a relationship of trust</strong> — the instructor and students are treated as business partners. Trust is the foundation of any business collaboration.</li>
+      </ul>
+    </div>
+
+    <!-- ── Section 3: What is AI ── -->
+    <div class="section">
+      <span class="section-anchor" id="what-is-ai"></span>
+      <h2 class="sec-title"><span class="icon">🧠</span> What is Artificial Intelligence?</h2>
+
+      <div class="callout def">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Definition: Intelligence</strong>
+          <p>Intelligence is the ability to <strong>observe, understand, and make a decision</strong> based on that observation — without needing to ask someone else every single time.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">The Microwave Analogy</h3>
+      <div class="card">
+        <h4>🔥 Ordinary Microwave <span class="badge badge-orange">No AI</span></h4>
+        <p>You open the door, put in your food, and <em>manually set the timer</em> — 1 minute for warm food, 5 minutes for frozen. The intelligence is entirely yours. The microwave is a passive tool.</p>
+      </div>
+      <div class="card">
+        <h4>🤖 AI-Powered Microwave <span class="badge badge-blue">With AI</span></h4>
+        <p>The microwave <em>measures the food's temperature</em>, determines whether it is frozen (0–5°C) or room temperature, and automatically sets the correct heating time — <strong>without asking you</strong>. This is Artificial Intelligence: a machine trained with rules so it can make decisions on your behalf.</p>
+      </div>
+
+      <div class="callout def">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Definition: Artificial Intelligence</strong>
+          <p>AI is software trained on large amounts of data so that it can perform <strong>pattern-matching and decision-making</strong> autonomously — without asking a human for every decision. It is powered by mathematics, programming, and data.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">AI in Your Daily Life</h3>
+      <ul class="clean">
+        <li><strong>Google Translate</strong> — translates a Spanish message to English automatically.</li>
+        <li><strong>Product recommendations</strong> — after you view a laptop, social media shows you laptop accessories.</li>
+        <li><strong>YouTube suggestions</strong> — videos related to what you just watched.</li>
+        <li><strong>Autocorrect &amp; spell check</strong> — predicts and fixes your typos in real time.</li>
+        <li><strong>ChatGPT / Claude</strong> — generates text, answers questions, writes code.</li>
+      </ul>
+    </div>
+
+    <!-- ── Section 4: Three Levels ── -->
+    <div class="section">
+      <span class="section-anchor" id="three-levels"></span>
+      <h2 class="sec-title"><span class="icon">📊</span> The Three Levels of AI</h2>
+
+      <p>AI has evolved through three distinct levels. Understanding them is the foundation of this entire course.</p>
+
+      <div class="levels-grid">
+        <div class="level-card l1">
+          <div class="level-num">1</div>
+          <h4>LEVEL 1 — Predictive AI</h4>
+          <p>Classifies inputs as <strong>Yes/No</strong> or into categories. No conversation. Just a prediction.</p>
+          <ul>
+            <li>Spam email detector</li>
+            <li>Cat vs. Dog image classifier</li>
+            <li>Fraud detection</li>
+            <li>Weather forecasting models</li>
+            <li><strong>= Machine Learning era</strong></li>
+          </ul>
+        </div>
+        <div class="level-card l2">
+          <div class="level-num">2</div>
+          <h4>LEVEL 2 — Generative AI</h4>
+          <p>Creates new content (text, images, video, code) by learning patterns from massive internet data.</p>
+          <ul>
+            <li>Write emails, reports, summaries</li>
+            <li>Generate images (DALL-E, Midjourney)</li>
+            <li>Generate code</li>
+            <li>Generate videos (Veo3)</li>
+            <li>Remembers context &amp; conversation</li>
+            <li><strong>= ChatGPT era (2022+)</strong></li>
+          </ul>
+        </div>
+        <div class="level-card l3">
+          <div class="level-num">3</div>
+          <h4>LEVEL 3 — Agentic AI</h4>
+          <p>Given a <em>goal</em>, plans and executes the entire workflow end-to-end, uses tools, self-corrects, and delivers results.</p>
+          <ul>
+            <li>Plans → Researches → Builds → Tests → Fixes</li>
+            <li>Uses external tools (web, APIs)</li>
+            <li>Self-corrects when errors occur</li>
+            <li>Delivers the final outcome</li>
+            <li><strong>= What this course is about</strong></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout key">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Key Takeaway: None of the levels are dead</strong>
+          <p>Predictive AI (Machine Learning) and Generative AI are still very much alive and valuable. Gemini's new Omni model generates videos — that's Level 2. These levels are additive, not replacements. Level 3 (Agentic) is the newest frontier and the focus of this course.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 5: Agentic AI ── -->
+    <div class="section">
+      <span class="section-anchor" id="agentic-ai"></span>
+      <h2 class="sec-title"><span class="icon">⚡</span> Agentic AI — Deep Dive</h2>
+
+      <p><strong>Agentic</strong> means "to act." An Agentic AI system receives a high-level goal and autonomously executes it from start to finish.</p>
+
+      <h3 class="sub-title">Example: Build a Landing Page</h3>
+      <p>You tell the AI: <em>"I'm launching a new product. Build an interactive, beautiful landing page for my e-commerce site."</em></p>
+
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">Phase 1</div>
+          <div class="step-label">🗺 Planning</div>
+          <div class="step-note">Breaks goal into ordered sub-steps</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 2</div>
+          <div class="step-label">🔍 Research</div>
+          <div class="step-note">Searches web for 2026 landing page trends</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 3</div>
+          <div class="step-label">🏗 Building</div>
+          <div class="step-note">Constructs the landing page</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 4</div>
+          <div class="step-label">🧪 Testing</div>
+          <div class="step-note">Checks if it works correctly</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 5</div>
+          <div class="step-label">🔧 Fixing</div>
+          <div class="step-note">Self-corrects any failures</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Output</div>
+          <div class="step-label">✅ Delivers URL</div>
+          <div class="step-note">Returns live result to you</div>
+        </div>
+      </div>
+
+      <h3 class="sub-title">The 4 Properties that Make AI "Agentic"</h3>
+      <div class="card">
+        <h4>🗺 1. Planning</h4>
+        <p>Breaks a large goal into smaller ordered sub-tasks, prioritizes them, and creates an execution sequence.</p>
+      </div>
+      <div class="card">
+        <h4>🛠 2. Tool Use</h4>
+        <p>Connects to the outside world — web search, APIs, file systems, databases — to gather real-time information. It can do in 5 minutes what would take a human 3 days of research.</p>
+      </div>
+      <div class="card">
+        <h4>🔁 3. Self-Correction</h4>
+        <p>When tests fail or errors occur, the AI identifies the problem, fixes it, and re-validates — without any human intervention. It keeps iterating until the goal is achieved.</p>
+      </div>
+      <div class="card">
+        <h4>🎯 4. End-to-End Execution</h4>
+        <p>Unlike Generative AI (which gives one step at a time), Agentic AI executes the entire pipeline from your initial goal to the final deliverable — you receive the result, not the intermediate steps.</p>
+      </div>
+
+      <div class="callout insight">
+        <span class="callout-icon">🔮</span>
+        <div class="callout-body">
+          <strong>What's next after Agentic AI?</strong>
+          <p><strong>AGI (Artificial General Intelligence)</strong> — AI that can reason and perform at a human level across all domains. It is the next phase beyond Agentic AI. The course intentionally does not go there yet, as it would open a very long separate debate.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 6: Generative vs Agentic ── -->
+    <div class="section">
+      <span class="section-anchor" id="generative-vs-agentic"></span>
+      <h2 class="sec-title"><span class="icon">⚖️</span> Generative AI vs Agentic AI</h2>
+
+      <p>Both are powerful — but they solve different problems at very different levels of autonomy.</p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Dimension</th>
+            <th>Generative AI (Level 2)</th>
+            <th>Agentic AI (Level 3)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>What you give it</strong></td>
+            <td>A single command / prompt</td>
+            <td>A high-level goal</td>
+          </tr>
+          <tr>
+            <td><strong>What it does</strong></td>
+            <td>Generates one piece of output</td>
+            <td>Plans, acts, iterates, delivers full outcome</td>
+          </tr>
+          <tr>
+            <td><strong>Human effort after</strong></td>
+            <td>You still do all the follow-up work</td>
+            <td>Minimal — you review and approve</td>
+          </tr>
+          <tr>
+            <td><strong>Self-correction</strong></td>
+            <td>No — gives output whether right or wrong</td>
+            <td>Yes — tests and fixes its own work</td>
+          </tr>
+          <tr>
+            <td><strong>Tool use</strong></td>
+            <td>Typically none</td>
+            <td>Yes — web, files, APIs, databases</td>
+          </tr>
+          <tr>
+            <td><strong>Role of AI</strong></td>
+            <td>AI as a <em>Tool</em></td>
+            <td>AI as a <em>Worker</em></td>
+          </tr>
+          <tr>
+            <td><strong>Example</strong></td>
+            <td>Write me one draft email</td>
+            <td>Run my entire email marketing campaign end-to-end</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Section 7: Tool vs Worker ── -->
+    <div class="section">
+      <span class="section-anchor" id="tool-vs-worker"></span>
+      <h2 class="sec-title"><span class="icon">🔄</span> AI as a Tool → AI as a Worker</h2>
+
+      <p>This is one of the most important mental shifts the course wants you to make.</p>
+
+      <div class="card">
+        <h4>🔨 AI as a Tool <span class="badge badge-orange">Old Paradigm</span></h4>
+        <p>You use AI to help with <em>one step</em> of your workflow (e.g., draft this email), but you still perform all the thinking, decision-making, sending, tracking, and follow-up yourself. The AI is a hammer — useful, but you swing it.</p>
+      </div>
+      <div class="card">
+        <h4>👷 AI as a Worker <span class="badge badge-green">New Paradigm</span></h4>
+        <p>You tell the AI <em>what outcome you want</em> (e.g., "run my email marketing campaign"), and it handles the entire workflow. You hire it like a contractor — it works, you check the finished result. You are the director, it is the crew.</p>
+      </div>
+
+      <h3 class="sub-title">The Bookshelf Analogy</h3>
+      <div class="card">
+        <h4>🪚 Building it yourself (Tool approach)</h4>
+        <p>You buy a drill and wood. You measure, cut, drill, and assemble. The drill is your tool — but every decision and action is yours. You do 100% of the work.</p>
+      </div>
+      <div class="card">
+        <h4>📋 Hiring a contractor (Worker approach)</h4>
+        <p>You tell the contractor: "I want a closed bookshelf, 2m × 1m, dust-proof, within this budget." You drink coffee while they work. You inspect the finished shelf and approve. You did 10% of the work. They did 80%. You verified the last 10%.</p>
+      </div>
+
+      <div class="callout key">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Real-World Example: Factory Email Marketing</strong>
+          <ul class="clean" style="margin-top:6px;">
+            <li><strong>With Generative AI (Tool):</strong> You draft one generic email. You send it manually to all customers. You track opens and conversions manually. You analyze product performance manually.</li>
+            <li><strong>With Agentic AI (Worker):</strong> The agent knows your entire customer history. It drafts <em>personalized</em> emails per customer segment. It schedules and sends them. It tracks performance. It reports back to you. You review the summary and approve.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout tip" style="margin-top:6px;">
+        <span class="callout-icon">✍️</span>
+        <div class="callout-body">
+          <strong>Your Task for This Session</strong>
+          <p>Think about <strong>your own daily role</strong>: Which tasks do you wish someone else could handle? Which tasks do you do repeatedly that follow a pattern? Those are your AI Worker candidates. Map them out.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 8: Agent Factory ── -->
+    <div class="section">
+      <span class="section-anchor" id="agent-factory"></span>
+      <h2 class="sec-title"><span class="icon">🏭</span> The Agent Factory</h2>
+
+      <div class="callout def">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Definition: Agent Factory</strong>
+          <p>A <strong>systematic process</strong> for designing, training, deploying, and verifying AI workers. Just as a garment factory produces shirts through repeatable steps (design → cut → stitch → QC → ship), an Agent Factory produces AI Workers through a repeatable pipeline.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Garment Factory → Agent Factory (Analogy)</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th>Garment Factory</th><th>Agent Factory</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Research market demand for fabrics &amp; styles</td><td>Define what AI worker is needed &amp; its job</td></tr>
+          <tr><td>Design the garment</td><td>Design the agent's behavior, tools, and scope</td></tr>
+          <tr><td>Cut and stitch fabric</td><td>Build and configure the AI worker</td></tr>
+          <tr><td>Quality control check</td><td>Test the agent on edge cases</td></tr>
+          <tr><td>Fix defects, re-check</td><td>Refine and re-test until it performs correctly</td></tr>
+          <tr><td>Package &amp; distribute</td><td>Deploy agent to production (cloud)</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="sub-title">The 4 Phases of Creating an AI Worker</h3>
+      <div class="flow">
+        <div class="flow-step">
+          <div class="step-num">Phase 1</div>
+          <div class="step-label">✏️ Design</div>
+          <div class="step-note">Define its job and how it should behave</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 2</div>
+          <div class="step-label">🎓 Train</div>
+          <div class="step-note">Teach it step-by-step like an intern</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 3</div>
+          <div class="step-label">🚀 Deploy</div>
+          <div class="step-note">Ship it to real-world (cloud)</div>
+        </div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-step">
+          <div class="step-num">Phase 4</div>
+          <div class="step-label">📈 Monitor</div>
+          <div class="step-note">Verify it handles all cases correctly</div>
+        </div>
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Agent Factory ≠ AI-Native Company</strong>
+          <ul class="clean" style="margin-top:6px;">
+            <li><strong>Agent Factory</strong> = the <em>process</em> used to build AI workers.</li>
+            <li><strong>AI-Native Company</strong> = a <em>company</em> that uses AI workers to operate its business functions.</li>
+            <li>These are distinct concepts — do not confuse them.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 9: AI-Native Company ── -->
+    <div class="section">
+      <span class="section-anchor" id="ai-native-company"></span>
+      <h2 class="sec-title"><span class="icon">🏢</span> The AI-Native Company</h2>
+
+      <div class="callout def">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Definition: AI-Native Company</strong>
+          <p>A company whose core operations are run by <strong>AI workers</strong> across every department (marketing, sales, customer support, finance, etc.), with a small team of skilled humans providing supervision, strategic direction, and approval.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Example: Customer Support Department</h3>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Traditional Company</th>
+            <th>AI-Native Company</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Staff</strong></td>
+            <td>200 human agents answering calls, emails, chats</td>
+            <td>190 AI workers + 10 human supervisors</td>
+          </tr>
+          <tr>
+            <td><strong>Availability</strong></td>
+            <td>Business hours + shifts</td>
+            <td>24/7 — AI never sleeps, gets tired, or takes breaks</td>
+          </tr>
+          <tr>
+            <td><strong>Speed</strong></td>
+            <td>Limited by human processing speed</td>
+            <td>Near-instant responses at scale</td>
+          </tr>
+          <tr>
+            <td><strong>Cost</strong></td>
+            <td>200× salaries + benefits</td>
+            <td>10 salaries + AI compute costs (much lower)</td>
+          </tr>
+          <tr>
+            <td><strong>Human role</strong></td>
+            <td>Handling every ticket manually</td>
+            <td>Supervising AI workers + handling complex escalations</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="callout key">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Key Takeaway: Humans are promoted, not replaced</strong>
+          <p>The mediocre worker who manually handled routine tasks is replaced by AI. But the capable human is <strong>promoted to supervisor/director</strong>. You move from executing tasks to directing and owning outcomes. The human role becomes more strategic, not obsolete.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 10: 10-80-10 Rule ── -->
+    <div class="section">
+      <span class="section-anchor" id="ten-eighty-ten"></span>
+      <h2 class="sec-title"><span class="icon">📐</span> The 10-80-10 Rule</h2>
+
+      <p>This rule describes how work is divided between humans and AI in an Agentic system, using the analogy of a film director.</p>
+
+      <div class="rule-bar">
+        <div class="seg s10a">10%<br>Human<br>Direction</div>
+        <div class="seg s80">80% — AI Executes</div>
+        <div class="seg s10b">10%<br>Human<br>Verifies</div>
+      </div>
+
+      <div class="card">
+        <h4>🎬 First 10% — Human Sets Direction <span class="badge badge-blue">Most Critical</span></h4>
+        <p>Like a film director writing the script and briefing the cast, the human defines the <strong>intent, goal, and clear instructions</strong>. If your direction is wrong, everything the AI builds will be wrong. <em>"The better your instructions, the better the AI's work."</em></p>
+      </div>
+      <div class="card">
+        <h4>⚙️ Middle 80% — AI Worker Executes</h4>
+        <p>The AI does all the heavy lifting: research, planning, building, testing, self-correcting. Like the film crew — the recruiter recruits actors, the makeup artist does makeup, the VFX team does effects. None of that credit goes to the director.</p>
+      </div>
+      <div class="card">
+        <h4>✅ Final 10% — Human Verifies <span class="badge badge-blue">Most Critical</span></h4>
+        <p>Like the director watching the final cut, the human reviews the output. If something is wrong, you send it back. If it is correct, you approve it. <strong>Ownership is always yours</strong> — whether the result is good or bad.</p>
+      </div>
+
+      <h3 class="sub-title">Three Things That Always Stay with Humans</h3>
+      <ul class="clean">
+        <li><strong>Intention</strong> — You must clearly define what you want and communicate it to the AI worker.</li>
+        <li><strong>Verification</strong> — You check whether the AI's output meets your standard.</li>
+        <li><strong>Ownership</strong> — The final product is yours. Responsibility for errors is yours. You fix them (via the AI worker).</li>
+      </ul>
+
+      <div class="callout key" style="margin-top:14px;">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Real Impact: Business Report Writing</strong>
+          <ul class="clean" style="margin-top:6px;">
+            <li><strong>Old way:</strong> Open Word → Research → Write from A to Z → Format → Done. (Hours of work)</li>
+            <li><strong>New way:</strong> Spend ~20 minutes writing <em>clear instructions</em> → AI writes the report in 5 minutes → Spend ~20 minutes reviewing and fixing. <em>Same quality, fraction of the time.</em></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 11: Identic AI ── -->
+    <div class="section">
+      <span class="section-anchor" id="identic-ai"></span>
+      <h2 class="sec-title"><span class="icon">🪞</span> Identic AI / Personal AI Delegate</h2>
+
+      <div class="callout def">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Definition: Identic AI (Personal AI Delegate)</strong>
+          <p>Your <strong>digital twin</strong> — an AI that knows your preferences, writing style, communication patterns, and decision criteria. It acts as your personal manager between you and your AI workforce, coordinating tasks, summarizing reports, scheduling meetings, and routing approvals on your behalf.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">Why Do You Need an Identic AI?</h3>
+      <p>If you build 90 AI workers and they all work at the speed of light — but approvals must come from you, the human — your AI workers will be done in 2 days while waiting 2 months for your sign-off. <em>You become the bottleneck.</em></p>
+      <p>The Identic AI solves this: it manages your workers at their speed, summarizes results for you, and only escalates what is truly critical.</p>
+
+      <div class="card">
+        <h4>🏢 CEO Analogy</h4>
+        <p>A CEO doesn't talk to every employee. The CEO gives direction to managers, and managers coordinate with employees. Similarly:</p>
+        <ul class="clean" style="margin-top:8px;">
+          <li>You (CEO) → talk only to your <strong>Identic AI (manager)</strong></li>
+          <li>Identic AI → coordinates with specialized <strong>AI Workers</strong></li>
+          <li>AI Workers → return results to Identic AI</li>
+          <li>Identic AI → summarizes and reports back to you</li>
+        </ul>
+      </div>
+
+      <h3 class="sub-title">Specialized AI Workers (Examples)</h3>
+      <div class="tags">
+        <span class="tag">🔍 Research Worker</span>
+        <span class="tag">📅 Schedule Worker</span>
+        <span class="tag">📩 Follow-Up Worker</span>
+        <span class="tag">🔔 Updates Worker</span>
+        <span class="tag">📊 Reports Worker</span>
+        <span class="tag">💰 Budget Worker</span>
+        <span class="tag">📈 Analytics Worker</span>
+        <span class="tag">✍️ Drafting Worker</span>
+      </div>
+
+      <p style="margin-top:14px;">Each specialist worker does only <em>one thing</em> — but does it at expert level, 24/7, instantly. Your Identic AI coordinates them so you never have to manage them directly.</p>
+
+      <h3 class="sub-title">Two-Layer Architecture</h3>
+      <div class="card">
+        <h4>Layer 1 — Workforce Layer (Bottom)</h4>
+        <p>All your specialized AI workers living here. They do the actual task execution — research, reporting, customer service, analysis, etc.</p>
+      </div>
+      <div class="card">
+        <h4>Layer 2 — Identic / Edge Layer (Top)</h4>
+        <p>Your digital twin. Manages the workforce, coordinates between workers, aligns with your preferences, and reports outcomes to you. Without this layer, your company has no hierarchy — and collapses into chaos.</p>
+      </div>
+    </div>
+
+    <!-- ── Section 12: Two Modes ── -->
+    <div class="section">
+      <span class="section-anchor" id="two-modes"></span>
+      <h2 class="sec-title"><span class="icon">🎣</span> Two Modes of Using AI</h2>
+
+      <p>Not every problem needs an AI Worker. Knowing which mode to use is a key skill.</p>
+
+      <div class="card">
+        <h4>⚡ Mode 1 — Problem-Solving Mode <span class="badge badge-blue">One-Time Task</span></h4>
+        <p>You have a specific, one-off problem. You go to an AI (ChatGPT, Claude, Cowork), get the answer, and move on. Like catching a single fish when you are hungry — fast, direct, done.</p>
+        <p><em>Best for:</em> Occasional tasks with no need to repeat. Building an AI worker for a one-time task wastes more time than it saves.</p>
+      </div>
+      <div class="card">
+        <h4>🏗 Mode 2 — Manufacturing Mode <span class="badge badge-green">Recurring Task</span></h4>
+        <p>You have a task that repeats daily/weekly. You build a custom AI worker once, train it to your preferences, and let it run automatically every time. Like building a fishing net — upfront effort, but massive recurring benefit.</p>
+        <p><em>Best for:</em> High-volume, repeating, or mission-critical workflows (daily slides, customer emails, invoice processing).</p>
+      </div>
+
+      <div class="callout tip">
+        <span class="callout-icon">✅</span>
+        <div class="callout-body">
+          <strong>Decision Rule</strong>
+          <p>Ask yourself: <em>"Will I need this done again tomorrow?"</em> If yes → build a Worker (Mode 2). If it is a one-time thing → use a general AI directly (Mode 1). Both are valid. The mistake is over-engineering a one-time task, or under-engineering a recurring one.</p>
+        </div>
+      </div>
+
+      <h3 class="sub-title">General Agent vs. Custom AI Worker</h3>
+      <table class="compare-table">
+        <thead>
+          <tr><th></th><th>General Agent (e.g., Claude, Cowork)</th><th>Custom AI Worker</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Coverage</strong></td><td>Any task, any domain</td><td>One specific domain — expert level</td></tr>
+          <tr><td><strong>Quality</strong></td><td>~60–70% quality</td><td>Expert-level quality</td></tr>
+          <tr><td><strong>Cost per task</strong></td><td>Higher (powerful model on every call)</td><td>Lower (lightweight, specialized model)</td></tr>
+          <tr><td><strong>Volume</strong></td><td>Not cost-effective at scale</td><td>Designed for high-volume operations</td></tr>
+          <tr><td><strong>When to use</strong></td><td>Quick, occasional, exploratory work</td><td>Production-scale, recurring, critical tasks</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Section 13: Seven Golden Rules ── -->
+    <div class="section">
+      <span class="section-anchor" id="seven-rules"></span>
+      <h2 class="sec-title"><span class="icon">📜</span> The 7 Golden Rules of Any AI Company</h2>
+
+      <p>Like a building that must always have a foundation, pillars, doors, and windows — there are <strong>7 non-negotiable rules</strong> that every AI worker system must satisfy, regardless of the tools used.</p>
+
+      <div class="callout def">
+        <span class="callout-icon">📌</span>
+        <div class="callout-body">
+          <strong>Analogy: Building Rules</strong>
+          <p>You can choose the style of roof (flat or sloped), the type of windows (sliding or hinged), or the facade material — but you cannot negotiate on having a foundation, pillars, a roof, and doors. These are absolute. Similarly, you can swap AI tools and models, but the 7 rules stay constant forever.</p>
+        </div>
+      </div>
+
+      <div class="rules-grid">
+        <div class="rule-card">
+          <div class="rule-num">Rule 1</div>
+          <h4>Human Is Always In Charge</h4>
+          <p>The first 10% (direction) and the last 10% (verification) always belong to a human. No AI should replace these critical checkpoints. If something goes wrong, the human who set the direction is responsible.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">Rule 2</div>
+          <h4>Every Human Gets a Delegate</h4>
+          <p>Every human manager needs an Identic AI (their digital twin) to keep pace with the AI workforce. Without a delegate, the human becomes the bottleneck and loses all the speed advantages of AI workers.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">Rule 3</div>
+          <h4>Workforce Needs a Management Layer</h4>
+          <p>A middle management AI layer must exist to hire/fire workers, assign tasks, monitor health, handle escalations, and coordinate between workers. Without it, the system has no hierarchy and degrades into chaos.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">Rule 4</div>
+          <h4>Each Worker Uses the Right Engine</h4>
+          <p>Match compute power to task complexity. A report-writer doesn't need 64GB RAM. A real-time production monitor needs high capacity. Over-provisioning wastes money; under-provisioning causes failure.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">Rule 5</div>
+          <h4>Every Worker Has a System of Record</h4>
+          <p>AI workers must be connected to your company's real data (orders, customers, financials) — not just their training data. Without real-time company context, workers make wrong decisions based on outdated information.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">Rule 6</div>
+          <h4>Workforce Can Grow Under Rules</h4>
+          <p>Define limits: budget caps, scope boundaries, what workers can and cannot do autonomously (e.g., can they hire new workers? fire others?). Unconstrained AI workers are a financial and operational risk.</p>
+        </div>
+        <div class="rule-card">
+          <div class="rule-num">Rule 7</div>
+          <h4>Company Runs on a Nervous System</h4>
+          <p>Workers communicate directly with each other (passing outputs as inputs) — like nerve signals. No human needs to relay messages between them. If one crashes, it self-recovers. The whole system operates as a living organism.</p>
+        </div>
+      </div>
+
+      <div class="callout key" style="margin-top:18px;">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>These rules are tool-agnostic</strong>
+          <p>The tools you use to implement these rules will change over time as better frameworks emerge. But the 7 rules themselves are permanent. Master the principles, then apply any tool.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 14: Vocab ── -->
+    <div class="section">
+      <span class="section-anchor" id="vocab"></span>
+      <h2 class="sec-title"><span class="icon">📚</span> Key Vocabulary</h2>
+
+      <div class="vocab-grid">
+        <div class="vocab-item">
+          <span class="vocab-term">Predictive AI</span>
+          <span class="vocab-def">Level 1 AI. Classifies inputs as yes/no or into categories. The foundation of the Machine Learning era (spam filters, image classifiers).</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Generative AI</span>
+          <span class="vocab-def">Level 2 AI. Creates new content (text, images, video, code) by learning patterns from massive datasets. Introduced with ChatGPT in 2022.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Agentic AI</span>
+          <span class="vocab-def">Level 3 AI. Given a goal, autonomously plans, acts (using tools), self-corrects, and delivers end-to-end results without per-step human guidance.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">AI Worker</span>
+          <span class="vocab-def">A custom AI agent built for a specific job (e.g., marketing emails, slide creation). Knows its task, knows the company context, and executes repeatedly without oversight for each run.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Agent Factory</span>
+          <span class="vocab-def">The repeatable process for designing, training, deploying, and verifying AI workers. Named after the book the Panaversity team is writing.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">AI-Native Company</span>
+          <span class="vocab-def">A company that runs its core operations using AI workers, supervised by a small human team. Most departments (sales, support, finance) are staffed by AI workers.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Identic AI</span>
+          <span class="vocab-def">Your personal digital twin — an AI delegate that knows your preferences and manages your AI workforce on your behalf, so you do not bottleneck the system.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">10-80-10 Rule</span>
+          <span class="vocab-def">Human provides direction (10%), AI executes (80%), human verifies (10%). The two 10% segments are the most critical and non-negotiable.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Digital FTE</span>
+          <span class="vocab-def">Digital Full-Time Employee — an AI worker that works for you full-time, 24/7. Equivalent to a permanent employee but powered by AI. Also called an AI Worker.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">System of Record</span>
+          <span class="vocab-def">The real-time company data (orders, customers, product performance) that AI workers must be connected to — so they make decisions based on actual current data, not pre-training knowledge.</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Workforce Layer</span>
+          <span class="vocab-def">The base layer of specialized AI workers that perform the actual work (research, reporting, customer service).</span>
+        </div>
+        <div class="vocab-item">
+          <span class="vocab-term">Edge / Identic Layer</span>
+          <span class="vocab-def">The management layer above the workforce — occupied by the Identic AI (your digital twin), which coordinates all workers and reports to you.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Section 15: Homework ── -->
+    <div class="section">
+      <span class="section-anchor" id="homework"></span>
+      <h2 class="sec-title"><span class="icon">📝</span> Homework &amp; Next Steps</h2>
+
+      <div class="homework">
+        <h4>📋 Assignment for This Week</h4>
+        <ul>
+          <li><strong>Read the Agent Factory book thesis</strong> — available on the course portal. If you are a beginner, read the "Plain English" version. If you are a professional, read the full version. This is mandatory before the next class.</li>
+          <li><strong>Create your own domain example</strong> — Study the "e-Commerce Smart" example in the book (which shows how to build an AI worker in 5 steps). Then <strong>replicate it in your own domain</strong> (your job, business, or field).</li>
+          <li><strong>Share in the discussion group</strong> — Post your domain-specific example in the WhatsApp discussion group so peers can read, learn, and broaden their thinking.</li>
+          <li><strong>Download &amp; post your welcome card</strong> — From the course portal, download your enrollment welcome card and post it on LinkedIn. Market yourself: "I am learning Agentic AI at Panaversity." Nobody will market you except yourself.</li>
+          <li><strong>Join the WhatsApp groups</strong> — Notifications group (for announcements) AND discussions group (for peer learning). Both links are in the portal dashboard.</li>
+        </ul>
+      </div>
+
+      <div class="callout tip" style="margin-top:18px;">
+        <span class="callout-icon">🔮</span>
+        <div class="callout-body">
+          <strong>What's Coming in Future Lectures</strong>
+          <ul class="clean" style="margin-top:6px;">
+            <li>Mode 1 (Problem-Solving) vs Mode 2 (Manufacturing) — in practical depth</li>
+            <li>Building your first AI worker using real tools</li>
+            <li>The e-Commerce Smart case study walkthrough</li>
+            <li>Frameworks: when to use them, when they are overkill</li>
+            <li>Deploying AI workers to the cloud</li>
+            <li>Monthly sessions with Zia Khan for progress reviews &amp; strategy discussions</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout insight" style="margin-top:14px;">
+        <span class="callout-icon">🎓</span>
+        <div class="callout-body">
+          <strong>Platform Navigation (panaversity.org)</strong>
+          <ul class="clean" style="margin-top:6px;">
+            <li><strong>Dashboard</strong> → Your enrolled courses, schedule (Friday &amp; Sunday, 8:00 PM)</li>
+            <li><strong>Lectures tab</strong> → Access all class recordings</li>
+            <li><strong>Join Class</strong> → Your Zoom link for live sessions</li>
+            <li><strong>WhatsApp (Notifications)</strong> → Official announcements from instructors</li>
+            <li><strong>WhatsApp (Discussions)</strong> → Peer-to-peer discussion, project sharing</li>
+            <li><strong>GitHub</strong> → Code resources shared by the team</li>
+            <li><strong>Welcome Card</strong> → Download for LinkedIn post</li>
+            <li><strong>Projects tab</strong> → View and submit all assignments</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  // Highlight active TOC link on scroll
+  const anchors = document.querySelectorAll('.section-anchor');
+  const links   = document.querySelectorAll('.toc a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        links.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector('.toc a[href="#' + id + '"]');
+        if (active) {
+          active.classList.add('active');
+          active.scrollIntoView({ block: 'nearest' });
+        }
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  anchors.forEach(a => observer.observe(a));
+</script>
+</body>
+</html>
